@@ -1,0 +1,77 @@
+"use client"
+
+import { useState, useEffect } from "react"
+
+const words = ["User-Experience", "Kunde", "Architektur", "Product-Manager", "Developer", "Projektleiter", "Product Owner"]
+
+// Define gradient classes for each word
+const gradients = {
+  "User-Experience": "bg-gradient-to-r from-pink-500 to-violet-500",
+  "Kunde": "bg-gradient-to-r from-orange-500 to-amber-500",
+  "Architektur": "bg-gradient-to-r from-indigo-500 to-purple-500",
+  "Product-Manager": "bg-gradient-to-r from-rose-500 to-red-500",
+  "Developer": "bg-gradient-to-r from-sky-500 to-cyan-500",
+  "Projektleiter": "bg-gradient-to-r from-blue-500 to-cyan-500",
+  "Product Owner": "bg-gradient-to-r from-emerald-500 to-teal-500",
+}
+
+export default function TypewriterHero() {
+  const [currentWord, setCurrentWord] = useState("")
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [showCursor, setShowCursor] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(
+      () => {
+        if (!isDeleting && currentWord === words[currentIndex]) {
+          setTimeout(() => setIsDeleting(true), 1500)
+          return
+        }
+
+        if (isDeleting && currentWord === "") {
+          setIsDeleting(false)
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % words.length)
+          return
+        }
+
+        setCurrentWord((prev) => (isDeleting ? prev.slice(0, -1) : words[currentIndex].slice(0, prev.length + 1)))
+      },
+      isDeleting ? 75 : 150,
+    )
+
+    return () => clearTimeout(timer)
+  }, [currentWord, currentIndex, isDeleting])
+
+  useEffect(() => {
+    const cursorTimer = setInterval(() => {
+      setShowCursor((prev) => !prev)
+    }, 530)
+
+    return () => clearInterval(cursorTimer)
+  }, [])
+
+  return (
+    <div className="w-full max-w-5xl mx-auto py-28 px-4">
+      <div className="text-center space-y-6">
+        <h1 className="text-4xl md:text-5xl font-bold">
+          Ich bin Requirements Engineer an der Schnittstelle zwischen
+        </h1>
+        <div className="h-24 flex items-center justify-center">
+          <div className="relative inline-flex items-center text-3xl md:text-4xl font-bold leading-loose py-2">
+            <span className={`${gradients[words[currentIndex]]} text-transparent bg-clip-text pb-1`}>
+              {currentWord}
+            </span>
+            <span 
+              className={`
+                absolute -right-2 top-1/4 h-1/2 w-[3px] bg-current
+                ${showCursor ? "opacity-100" : "opacity-0"}
+                transition-opacity duration-100
+              `}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
