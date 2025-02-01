@@ -54,11 +54,11 @@ export default function TypewriterHero() {
   return (
     <div className="w-full max-w-5xl mx-auto py-28 px-4">
       <div className="text-center space-y-6">
-        <h1 className="text-5xl md:text-6xl font-bold">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-snug sm:leading-normal md:leading-normal">
           Ich bin Requirements Engineer an der Schnittstelle zwischen
         </h1>
-        <div className="h-32 flex items-center justify-center">
-          <div className="relative inline-flex items-center text-5xl md:text-6xl font-bold leading-loose py-2">
+        <div className="h-24 sm:h-28 md:h-32 flex items-center justify-center">
+          <div className="relative inline-flex items-center text-4xl sm:text-5xl md:text-6xl font-bold leading-snug sm:leading-normal md:leading-relaxed py-2">
             <span className={`${gradients[words[currentIndex]]} text-transparent bg-clip-text pb-1 animate-gradient bg-[length:200%_200%] bg-clip-text bg-gradient-to-r`}>
               {currentWord}
             </span>
