@@ -7,7 +7,6 @@
  */
 
 import { createClient } from 'contentful';
-import type { EntryCollection } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 
 /**
@@ -18,6 +17,23 @@ const client = createClient({
   space: CONTENTFUL_SPACE_ID,
   accessToken: CONTENTFUL_ACCESS_TOKEN,
 });
+
+/**
+ * Interface für Rich-Text-Inhalt
+ * Definiert die Struktur von Rich-Text-Inhalten wie sie von Contentful empfangen werden
+ */
+interface RichText {
+  json: {
+    nodeType: string;
+    content: Array<{
+      nodeType: string;
+      content: Array<{
+        nodeType: string;
+        value: string;
+      }>;
+    }>;
+  };
+}
 
 /**
  * Interface für einen Blog-Artikel
@@ -40,9 +56,7 @@ interface Article {
   title: string;
   slug: string;
   summary: string;
-  details: {
-    json: any;
-  };
+  details: RichText;
   date: string;
   authorName: string;
   categoryName: string;
@@ -57,14 +71,32 @@ interface Article {
  * @param item - Rohdaten eines Artikels von Contentful
  * @returns Ein formatiertes Article-Objekt
  */
-function transformArticle(item: any): Article {
+function transformArticle(item: {
+  sys: { id: string };
+  fields: {
+    title: string;
+    slug: string;
+    summary: string;
+    details: RichText;
+    date: string;
+    authorName: string;
+    categoryName: string;
+    articleImage?: {
+      fields: {
+        file: {
+          url: string;
+        };
+      };
+    };
+  };
+}): Article {
   return {
     sys: { id: item.sys.id },
     title: item.fields.title,
     slug: item.fields.slug,
     summary: item.fields.summary,
     details: {
-      json: item.fields.details
+      json: item.fields.details.json
     },
     date: item.fields.date,
     authorName: item.fields.authorName,
@@ -82,7 +114,7 @@ function transformArticle(item: any): Article {
  * @returns Ein Array von Article-Objekten, sortiert nach Datum (neueste zuerst)
  */
 export async function getAllArticles(limit = 6): Promise<Article[]> {
-  const response = await client.getEntries<any>({
+  const response = await client.getEntries({
     content_type: 'knowledgeArticle',
     limit,
     order: ['-fields.date'] as const,

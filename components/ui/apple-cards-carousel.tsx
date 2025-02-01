@@ -169,7 +169,7 @@ export const Card = ({
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        handleClose();
+        onCardClose(currentIndex);
       }
     }
 
@@ -181,17 +181,15 @@ export const Card = ({
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
+  }, [open, onCardClose, currentIndex]);
 
-  useOutsideClick(containerRef, () => handleClose());
+  useOutsideClick(containerRef, () => {
+    setOpen(false);
+    onCardClose(index);
+  });
 
   const handleOpen = () => {
     setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    onCardClose(index);
   };
 
   return (
@@ -215,7 +213,10 @@ export const Card = ({
             >
               <button
                 className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center"
-                onClick={handleClose}
+                onClick={() => {
+                  setOpen(false);
+                  onCardClose(index);
+                }}
               >
                 <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
               </button>

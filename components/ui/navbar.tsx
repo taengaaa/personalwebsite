@@ -15,7 +15,6 @@ interface NavBarProps {
 export function NavBar({ activePage, className }: NavBarProps) {
   const pathname = usePathname()
   const [activeTab, setActiveTab] = useState(activePage || "")
-  const [isMobile, setIsMobile] = useState(false)
 
   const navItems = [
     {
@@ -49,11 +48,11 @@ export function NavBar({ activePage, className }: NavBarProps) {
         setActiveTab(currentItem.name)
       }
     }
-  }, [pathname, activePage])
+  }, [pathname, activePage, navItems])
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
+      const isMobile = window.innerWidth < 768
     }
 
     handleResize()
