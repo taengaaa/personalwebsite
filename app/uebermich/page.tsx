@@ -129,7 +129,7 @@ const timelineData = [
 export default function UeberMichPage() {
   return (
     <>
-      <NavBar items={navItems} />
+      <NavBar activePage="Über mich" />
       <main className="min-h-screen bg-gradient-to-b from-background to-background/80 pt-24">
         <section className="container py-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">

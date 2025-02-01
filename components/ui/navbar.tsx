@@ -4,31 +4,52 @@ import React, { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LucideIcon } from "lucide-react"
+import { Home, User, BookOpen, Briefcase } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-interface NavItem {
-  name: string
-  url: string
-  icon: LucideIcon
-}
-
 interface NavBarProps {
-  items: NavItem[]
+  activePage?: string
   className?: string
 }
 
-export function NavBar({ items, className }: NavBarProps) {
+export function NavBar({ activePage, className }: NavBarProps) {
   const pathname = usePathname()
-  const [activeTab, setActiveTab] = useState("")
+  const [activeTab, setActiveTab] = useState(activePage || "")
   const [isMobile, setIsMobile] = useState(false)
 
+  const navItems = [
+    {
+      name: "Home",
+      url: "/",
+      icon: Home,
+    },
+    {
+      name: "Über mich",
+      url: "/uebermich",
+      icon: User,
+    },
+    {
+      name: "Blog",
+      url: "/blog",
+      icon: BookOpen,
+    },
+    {
+      name: "Projekte",
+      url: "/projekte",
+      icon: Briefcase,
+    },
+  ]
+
   useEffect(() => {
-    const currentItem = items.find(item => item.url === pathname)
-    if (currentItem) {
-      setActiveTab(currentItem.name)
+    if (activePage) {
+      setActiveTab(activePage)
+    } else {
+      const currentItem = navItems.find(item => item.url === pathname)
+      if (currentItem) {
+        setActiveTab(currentItem.name)
+      }
     }
-  }, [pathname, items])
+  }, [pathname, activePage])
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,7 +69,7 @@ export function NavBar({ items, className }: NavBarProps) {
       )}
     >
       <div className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
-        {items.map((item) => {
+        {navItems.map((item) => {
           const Icon = item.icon
           const isActive = activeTab === item.name
 

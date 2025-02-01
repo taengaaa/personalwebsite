@@ -31,7 +31,7 @@ const navItems = [
 export default function HomePage() {
   return (
     <>
-      <NavBar items={navItems} />
+      <NavBar activePage="Home" />
       <main className="min-h-screen bg-gradient-to-b from-background to-background/80">
         <TypewriterHero />
         <section className="container pt-12 pb-32">

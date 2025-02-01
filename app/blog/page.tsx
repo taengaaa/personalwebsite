@@ -1,11 +1,15 @@
 import { getAllArticles } from "@/lib/blog";
 import Image from "next/image";
 import Link from "next/link";
+import { NavBar } from "@/components/ui/navbar";
+import { Home, User, BookOpen, Briefcase } from "lucide-react";
 
 export default async function BlogPage() {
   const articles = await getAllArticles(6);
 
   return (
+    <>
+    <NavBar activePage="Blog" />
     <main className="container mx-auto px-4 py-12">
       <Link
         href="/"
@@ -70,5 +74,6 @@ export default async function BlogPage() {
         ))}
       </div>
     </main>
+    </>
   );
 }
