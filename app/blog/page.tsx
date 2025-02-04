@@ -4,69 +4,67 @@ import Link from "next/link";
 import { NavBar } from "@/components/ui/navbar";
 import { Home, User, BookOpen, Briefcase } from "lucide-react";
 
+const navItems = [
+      {
+        name: "Home",
+        url: "/",
+        icon: Home,
+      },
+      {
+        name: "Über mich",
+        url: "/uebermich",
+        icon: User,
+      },
+      {
+        name: "Blog",
+        url: "/blog",
+        icon: BookOpen,
+      },
+      {
+        name: "Projekte",
+        url: "/projekte",
+        icon: Briefcase,
+      },
+];
+
 export default async function BlogPage() {
   const articles = await getAllArticles(6);
 
   return (
     <>
-    <NavBar activePage="Blog" />
-    <main className="container mx-auto px-4 py-12">
-      <Link
-        href="/"
-        className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 group"
-      >
-        <svg
-          className="w-4 h-4 mr-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        <span>Zurück zu Home</span>
-      </Link>
+    <NavBar />
+    <main className="container mx-auto px-4 pt-16 pb-8">
+      <h1 className="text-4xl font-bold mb-8">Blog</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {articles.map((article) => (
           <Link key={article.sys.id} href={`/blog/${article.slug}`} className="block group">
-            <article className="flex flex-col h-full rounded-xl overflow-hidden bg-white border border-gray-200 hover:shadow-lg transition-all duration-300">
+            <article className="flex flex-col h-full rounded-lg shadow-lg overflow-hidden bg-white transition-shadow hover:shadow-xl">
               {article.articleImage?.url && (
-                <div className="relative">
-                  <Image
-                    alt={article.title}
-                    className="aspect-[16/10] object-cover w-full"
-                    height={240}
-                    src={`https:${article.articleImage.url}`}
-                    width={400}
-                  />
-                </div>
+                <Image
+                  alt={article.title}
+                  className="aspect-[4/3] object-cover w-full"
+                  height={263}
+                  src={`https:${article.articleImage.url}`}
+                  width={350}
+                />
               )}
               <div className="flex-1 p-6">
-                <div className="mb-4">
-                  <span className="inline-flex items-center rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-700">
-                    {article.categoryName}
-                  </span>
+                <div className="inline-block rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-800 mb-3">
+                  {article.categoryName}
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-blue-600 mb-3 line-clamp-2">
+                <h3 className="text-2xl font-bold leading-tight text-gray-900 group-hover:text-gray-700 mb-4">
                   {article.title}
                 </h3>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                <p className="text-gray-500 mb-2 text-sm">
                   {article.summary}
                 </p>
-                <div className="mt-auto">
-                  <span className="text-sm text-gray-500">
-                    Von {article.authorName}
+                <p className="text-gray-600 mt-2 mb-2 text-sm font-bold">
+                  Geschrieben von: {article.authorName}
+                </p>
+                <div className="flex justify-end">
+                  <span className="inline-flex items-center justify-center text-sm font-medium text-blue-600 group-hover:text-blue-500">
+                    Mehr lesen →
                   </span>
-                  <div className="mt-4">
-                    <span className="inline-flex items-center text-sm font-medium text-blue-600 group-hover:text-blue-500">
-                      Jetzt lesen →
-                    </span>
-                  </div>
                 </div>
               </div>
             </article>

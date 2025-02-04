@@ -7,52 +7,58 @@ import { usePathname } from "next/navigation"
 import { Home, User, BookOpen, Briefcase } from "lucide-react"
 import { cn } from "@/lib/utils"
 
+interface NavItem {
+  name: string
+  url: string
+  icon: typeof Home
+}
+
 interface NavBarProps {
   activePage?: string
   className?: string
 }
 
+const navItems: NavItem[] = [
+  {
+    name: "Home",
+    url: "/",
+    icon: Home,
+  },
+  {
+    name: "Über mich",
+    url: "/uebermich",
+    icon: User,
+  },
+  {
+    name: "Blog",
+    url: "/blog",
+    icon: BookOpen,
+  },
+  {
+    name: "Projekte",
+    url: "/projekte",
+    icon: Briefcase,
+  },
+]
+
 export function NavBar({ activePage, className }: NavBarProps) {
   const pathname = usePathname()
-  const [activeTab, setActiveTab] = useState(activePage || "")
-
-  const navItems = [
-    {
-      name: "Home",
-      url: "/",
-      icon: Home,
-    },
-    {
-      name: "Über mich",
-      url: "/uebermich",
-      icon: User,
-    },
-    {
-      name: "Blog",
-      url: "/blog",
-      icon: BookOpen,
-    },
-    {
-      name: "Projekte",
-      url: "/projekte",
-      icon: Briefcase,
-    },
-  ]
+  const [activeTab, setActiveTab] = useState(activePage || pathname)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    if (activePage) {
-      setActiveTab(activePage)
-    } else {
-      const currentItem = navItems.find(item => item.url === pathname)
-      if (currentItem) {
-        setActiveTab(currentItem.name)
-      }
+    const currentItem = navItems.find(item => 
+      pathname === item.url || // exact match
+      (item.url !== "/" && pathname.startsWith(item.url)) // starts with, but exclude root path
+    )
+    if (currentItem) {
+      setActiveTab(currentItem.name)
     }
-  }, [pathname, activePage, navItems])
+  }, [pathname])
 
   useEffect(() => {
     const handleResize = () => {
-      const isMobile = window.innerWidth < 768
+      setIsMobile(window.innerWidth < 768)
     }
 
     handleResize()
@@ -64,7 +70,7 @@ export function NavBar({ activePage, className }: NavBarProps) {
     <div
       className={cn(
         "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6",
-        className,
+        className
       )}
     >
       <div className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
@@ -76,10 +82,11 @@ export function NavBar({ activePage, className }: NavBarProps) {
             <Link
               key={item.name}
               href={item.url}
+              onClick={() => setActiveTab(item.name)}
               className={cn(
                 "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
                 "text-foreground/80 hover:text-primary",
-                isActive && "bg-muted text-primary",
+                isActive && "bg-muted text-primary"
               )}
             >
               <span className="hidden md:inline">{item.name}</span>

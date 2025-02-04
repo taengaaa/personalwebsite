@@ -19,6 +19,7 @@ import { useOutsideClick } from "@/hooks/use-outside-click";
 interface CarouselProps {
   items: JSX.Element[];
   initialScroll?: number;
+  navItems: any; // Add navItems to the props
 }
 
 type Card = {
@@ -36,7 +37,7 @@ export const CarouselContext = createContext<{
   currentIndex: 0,
 });
 
-export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
+export const Carousel = ({ items, initialScroll = 0, navItems }: CarouselProps) => {
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
@@ -48,6 +49,21 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
       checkScrollability();
     }
   }, [initialScroll]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (carouselRef.current) {
+        const scrollLeft = carouselRef.current.scrollLeft;
+        const cardWidth = 384;
+        const gap = 8;
+        const newIndex = Math.round(scrollLeft / (cardWidth + gap));
+        setCurrentIndex(newIndex);
+      }
+    };
+
+    carouselRef.current?.addEventListener("scroll", handleScroll);
+    return () => carouselRef.current?.removeEventListener("scroll", handleScroll);
+  }, [navItems]);
 
   const checkScrollability = () => {
     if (carouselRef.current) {
@@ -71,8 +87,8 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   const handleCardClose = (index: number) => {
     if (carouselRef.current) {
-      const cardWidth = isMobile() ? 230 : 384; // (md:w-96)
-      const gap = isMobile() ? 4 : 8;
+      const cardWidth = 384; 
+      const gap = 8;
       const scrollPosition = (cardWidth + gap) * (index + 1);
       carouselRef.current.scrollTo({
         left: scrollPosition,
@@ -80,10 +96,6 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
       });
       setCurrentIndex(index);
     }
-  };
-
-  const isMobile = () => {
-    return window && window.innerWidth < 768;
   };
 
   return (
@@ -105,7 +117,7 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
           <div
             className={cn(
               "flex flex-row justify-start gap-4 pl-4",
-              "max-w-7xl mx-auto" // remove max-w-4xl if you want the carousel to span the full width of its container
+              "max-w-7xl mx-auto" 
             )}
           >
             {items.map((item, index) => (

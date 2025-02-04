@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link"; 
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import { NavBar } from "@/components/ui/navbar";
 
 // Rich Text Rendering Optionen
 const options = {
@@ -63,7 +64,7 @@ export async function generateStaticParams() {
 }
 
 export default async function BlogArticlePage({ params }: any) {
-  const { slug } = await params;
+  const { slug } = params;
   const article = await getArticle(slug);
 
   if (!article) {
@@ -71,57 +72,60 @@ export default async function BlogArticlePage({ params }: any) {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto">
-        <Link 
-          href="/blog" 
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 group"
-        >
-          <svg 
-            className="w-4 h-4 mr-2" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24" 
-            xmlns="http://www.w3.org/2000/svg"
+    <main className="min-h-screen bg-white">
+      <NavBar />
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="mt-24">
+          <Link 
+            href="/blog" 
+            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 group"
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M10 19l-7-7m0 0l7-7m-7 7h18" 
-            />
-          </svg>
-          <span>Zurück zum Blog</span>
-        </Link>
-
-        <article className="mb-8">
-          <header className="mb-8">
-            <h1 className="text-4xl font-bold mb-4 text-gray-900">{article.title}</h1>
-            <div className="flex items-center gap-4 text-gray-600 text-sm">
-              <span className="font-medium">By {article.authorName}</span>
-              <span>•</span>
-              <span>{new Date(article.date).toLocaleDateString()}</span>
-              <span>•</span>
-              <span className="font-medium">{article.categoryName}</span>
-            </div>
-          </header>
-
-          {article.articleImage?.url && (
-            <div className="mb-8">
-              <Image
-                alt={article.title}
-                className="w-full rounded-lg shadow-md"
-                height={400}
-                src={`https:${article.articleImage.url}`}
-                width={800}
+            <svg 
+              className="w-4 h-4 mr-2" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
               />
-            </div>
-          )}
+            </svg>
+            <span>Zurück zum Blog</span>
+          </Link>
 
-          <div className="prose prose-lg max-w-none">
-            {documentToReactComponents(article.details.json, options)}
-          </div>
-        </article>
+          <article className="mt-8">
+            <header className="mb-8">
+              <h1 className="text-4xl font-bold mb-4 text-gray-900">{article.title}</h1>
+              <div className="flex items-center gap-4 text-gray-600 text-sm">
+                <span className="font-medium">By {article.authorName}</span>
+                <span>•</span>
+                <span>{new Date(article.date).toLocaleDateString()}</span>
+                <span>•</span>
+                <span className="font-medium">{article.categoryName}</span>
+              </div>
+            </header>
+
+            {article.articleImage?.url && (
+              <div className="mb-8">
+                <Image
+                  alt={article.title}
+                  className="w-full rounded-lg shadow-md"
+                  height={400}
+                  src={`https:${article.articleImage.url}`}
+                  width={800}
+                />
+              </div>
+            )}
+
+            <div className="prose prose-lg max-w-none">
+              {documentToReactComponents(article.details.json, options)}
+            </div>
+          </article>
+        </div>
       </div>
     </main>
   );
