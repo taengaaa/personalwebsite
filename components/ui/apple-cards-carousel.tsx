@@ -19,7 +19,11 @@ import { useOutsideClick } from "@/hooks/use-outside-click";
 interface CarouselProps {
   items: JSX.Element[];
   initialScroll?: number;
-  navItems: any; // Add navItems to the props
+  navItems: {
+    name: string;
+    url: string;
+    icon: React.ComponentType;
+  }[];
 }
 
 type Card = {
@@ -51,6 +55,23 @@ export const Carousel = ({ items, initialScroll = 0, navItems }: CarouselProps) 
   }, [initialScroll]);
 
   useEffect(() => {
+    const currentCarousel = carouselRef.current;
+    if (!currentCarousel) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      currentCarousel.scrollLeft += e.deltaY;
+    };
+
+    currentCarousel.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      if (currentCarousel) {
+        currentCarousel.removeEventListener("wheel", handleWheel);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       if (carouselRef.current) {
         const scrollLeft = carouselRef.current.scrollLeft;
@@ -63,7 +84,7 @@ export const Carousel = ({ items, initialScroll = 0, navItems }: CarouselProps) 
 
     carouselRef.current?.addEventListener("scroll", handleScroll);
     return () => carouselRef.current?.removeEventListener("scroll", handleScroll);
-  }, [navItems]);
+  }, []);
 
   const checkScrollability = () => {
     if (carouselRef.current) {

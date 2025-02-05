@@ -5,7 +5,6 @@ import { Block, Inline } from '@contentful/rich-text-types';
 import Image from "next/image";
 import Link from "next/link"; 
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
 import { NavBar } from "@/components/ui/navbar";
 
 // Rich Text Rendering Optionen
@@ -63,7 +62,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function BlogArticlePage({ params }: any) {
+export default async function BlogArticlePage({ params }: { params: { slug: string } }) {
   const { slug } = params;
   const article = await getArticle(slug);
 

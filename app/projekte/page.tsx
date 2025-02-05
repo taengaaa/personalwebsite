@@ -3,29 +3,6 @@
 import { NavBar } from "@/components/ui/navbar";
 import { Home, User, BookOpen, Briefcase } from "lucide-react";
 
-const navItems = [
-  {
-    name: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    name: "Über mich",
-    url: "/uebermich",
-    icon: User,
-  },
-  {
-    name: "Blog",
-    url: "/blog",
-    icon: BookOpen,
-  },
-  {
-    name: "Projekte",
-    url: "/projekte",
-    icon: Briefcase,
-  },
-];
-
 export default function ProjektePage() {
   return (
     <>
