@@ -4,6 +4,7 @@ import Link from "next/link";
 import { NavBar } from "@/components/ui/navbar";
 import { Home, User, BookOpen, Briefcase } from "lucide-react";
 
+// Navigation Items
 const navItems = [
       {
         name: "Home",
