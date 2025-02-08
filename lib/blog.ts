@@ -9,7 +9,7 @@
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { Document, BLOCKS } from '@contentful/rich-text-types';
-import type { Entry, EntryFieldTypes, EntrySkeletonType } from 'contentful';
+import type { Entry, EntryFieldTypes, Asset, UnresolvedLink } from 'contentful';
 
 /**
  * Initialisierung des Contentful Clients
@@ -82,6 +82,21 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
     return (field as Document) || emptyDocument;
   };
 
+  const getAssetUrl = (asset: Asset | UnresolvedLink<'Asset'> | { [x: string]: Asset | UnresolvedLink<'Asset'> | undefined } | undefined): string => {
+    if (!asset) return '';
+    
+    if ('en-US' in asset) {
+      const localizedAsset = asset['en-US'];
+      return localizedAsset?.fields?.file?.url || '';
+    }
+    
+    if ('fields' in asset) {
+      return asset.fields?.file?.url || '';
+    }
+    
+    return '';
+  };
+
   return {
     sys: { id: item.sys.id },
     title: getLocalizedField(item.fields.title),
@@ -94,7 +109,7 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
     authorName: getLocalizedField(item.fields.authorName),
     categoryName: getLocalizedField(item.fields.categoryName),
     articleImage: {
-      url: item.fields.articleImage?.fields?.file?.url || ''
+      url: getAssetUrl(item.fields.articleImage)
     }
   };
 }
