@@ -74,57 +74,91 @@ export default async function BlogArticlePage({ params }: { params: { slug: stri
     <main className="min-h-screen bg-white">
       <NavBar />
       <div className="container mx-auto px-4 max-w-4xl">
-        <div className="mt-24">
-          <Link 
-            href="/blog" 
-            className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 group"
-          >
-            <svg 
-              className="w-4 h-4 mr-2" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
-              />
-            </svg>
-            <span>Zurück zum Blog</span>
-          </Link>
-
-          <article className="mt-8">
-            <header className="mb-8">
-              <h1 className="text-4xl font-bold mb-4 text-gray-900">{article.title}</h1>
-              <div className="flex items-center gap-4 text-gray-600 text-sm">
+        <article className="mt-12 md:mt-24">
+          <header className="mb-8 relative">
+            <div className="md:hidden mb-6">
+              <Link 
+                href="/blog" 
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-gray-50 transition-colors duration-200 shadow-sm border border-gray-200"
+                aria-label="Zurück zum Blog"
+              >
+                <svg 
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </Link>
+            </div>
+            
+            <div className="hidden md:block absolute -left-16 top-0">
+              <Link 
+                href="/blog" 
+                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white hover:bg-gray-50 transition-colors duration-200 shadow-sm border border-gray-200"
+                aria-label="Zurück zum Blog"
+              >
+                <svg 
+                  className="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </Link>
+            </div>
+            
+            <div className="flex flex-col gap-4">
+              <div className="hidden md:flex items-center gap-4">
+                <div className="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500" />
+                <span className="text-sm text-gray-600">{new Date(article.date).toLocaleDateString()}</span>
+              </div>
+              
+              <div className="flex flex-col gap-4">
+                <div className="md:hidden flex items-center gap-4">
+                  <div className="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500" />
+                  <span className="text-sm text-gray-600">{new Date(article.date).toLocaleDateString()}</span>
+                </div>
+              <h1 className="text-4xl font-bold text-gray-900 break-words">{article.title}</h1>
+              <div className="flex flex-wrap items-center gap-4 text-gray-600 text-sm">
                 <span className="font-medium">By {article.authorName}</span>
-                <span>•</span>
-                <span>{new Date(article.date).toLocaleDateString()}</span>
                 <span>•</span>
                 <span className="font-medium">{article.categoryName}</span>
               </div>
-            </header>
-
-            {article.articleImage?.url && (
-              <div className="mb-8">
-                <Image
-                  alt={article.title}
-                  className="w-full rounded-lg shadow-md"
-                  height={400}
-                  src={`https:${article.articleImage.url}`}
-                  width={800}
-                />
-              </div>
-            )}
-
-            <div className="prose prose-lg max-w-none">
-              {documentToReactComponents(article.details.json, options)}
             </div>
-          </article>
-        </div>
+            </div>
+          </header>
+
+          {article.articleImage?.url && (
+            <div className="mb-8">
+              <Image
+                alt={article.title}
+                className="w-full rounded-lg shadow-md"
+                height={400}
+                src={`https:${article.articleImage.url}`}
+                width={800}
+              />
+            </div>
+          )}
+
+          <div className="prose prose-lg max-w-none">
+            {documentToReactComponents(article.details.json, options)}
+          </div>
+        </article>
       </div>
     </main>
   );

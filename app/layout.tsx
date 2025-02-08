@@ -1,20 +1,37 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from 'next/font/local';
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const geist = localFont({
+  src: [
+    {
+      path: '../public/otf/Geist-Regular.otf',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: '../public/otf/Geist-Medium.otf',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: '../public/otf/Geist-SemiBold.otf',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: '../public/otf/Geist-Bold.otf',
+      weight: '700',
+      style: 'normal',
+    }
+  ],
+  variable: '--font-geist',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
   title: "Simon Affentranger",
-  description: "Personal website and blog of Simon Affentranger",
+  description: "Personal Website of Simon Affentranger",
 };
 
 export default function RootLayout({
@@ -23,12 +40,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="en" className={`${geist.variable}`}>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }
