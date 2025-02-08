@@ -51,13 +51,39 @@ interface Article {
   };
 }
 
+interface ContentfulSys {
+  id: string;
+}
+
+interface ContentfulFields {
+  title: string;
+  slug: string;
+  summary: string;
+  details: Document;
+  date: string;
+  authorName: string;
+  categoryName: string;
+  articleImage: {
+    fields: {
+      file: {
+        url: string;
+      }
+    }
+  };
+}
+
+interface ContentfulEntry {
+  sys: ContentfulSys;
+  fields: ContentfulFields;
+}
+
 /**
  * Transformiert die Rohdaten von Contentful in ein strukturiertes Article-Objekt
  * 
  * @param item - Rohdaten eines Artikels von Contentful
  * @returns Ein formatiertes Article-Objekt
  */
-function transformArticle(item: Record<string, unknown>): Article {
+function transformArticle(item: ContentfulEntry): Article {
   return {
     sys: { id: item.sys.id },
     title: item.fields.title,
@@ -70,7 +96,7 @@ function transformArticle(item: Record<string, unknown>): Article {
     authorName: item.fields.authorName,
     categoryName: item.fields.categoryName,
     articleImage: {
-      url: item.fields.articleImage?.fields?.file?.url || ''
+      url: item.fields.articleImage.fields.file.url
     }
   };
 }
@@ -82,7 +108,7 @@ function transformArticle(item: Record<string, unknown>): Article {
  * @returns Ein Array von Article-Objekten, sortiert nach Datum (neueste zuerst)
  */
 export async function getAllArticles(limit = 6): Promise<Article[]> {
-  const response = await client.getEntries<Record<string, unknown>>({
+  const response = await client.getEntries<ContentfulEntry>({
     content_type: 'knowledgeArticle',
     limit,
     order: ['-fields.date'] as const,
@@ -104,5 +130,5 @@ export async function getArticle(slug: string): Promise<Article | null> {
     limit: 1,
   });
 
-  return response.items.length > 0 ? transformArticle(response.items[0]) : null;
+  return response.items.length > 0 ? transformArticle(response.items[0] as ContentfulEntry) : null;
 }
