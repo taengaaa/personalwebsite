@@ -12,10 +12,10 @@ export function transformCard(item: Entry<ICard>) {
   const { fields } = item;
   
   return {
-    category: fields.category || '',
-    title: fields.title || '',
+    category: String(fields.category || ''),
+    title: String(fields.title || ''),
     src: fields.image?.fields?.file?.url ? `https:${fields.image.fields.file.url}` : '',
-    content: fields.description || '',
+    content: String(fields.description || ''),
   };
 }
 

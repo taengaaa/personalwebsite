@@ -3,14 +3,16 @@
 import React from "react";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 
+export interface Card {
+  category: string;
+  title: string;
+  src: string;
+  content: string;
+}
+
 interface ClientCardsSectionProps {
   title: string;
-  cards: Array<{
-    category: string;
-    title: string;
-    src: string;
-    content: React.ReactNode;
-  }>;
+  cards: Card[];
 }
 
 export default function ClientCardsSection({ title, cards }: ClientCardsSectionProps) {
