@@ -5,22 +5,22 @@ import "./globals.css";
 const geist = localFont({
   src: [
     {
-      path: '../public/otf/Geist-Regular.otf',
+      path: '../public/fonts/Geist-Regular.otf',
       weight: '400',
       style: 'normal',
     },
     {
-      path: '../public/otf/Geist-Medium.otf',
+      path: '../public/fonts/Geist-Medium.otf',
       weight: '500',
       style: 'normal',
     },
     {
-      path: '../public/otf/Geist-SemiBold.otf',
+      path: '../public/fonts/Geist-SemiBold.otf',
       weight: '600',
       style: 'normal',
     },
     {
-      path: '../public/otf/Geist-Bold.otf',
+      path: '../public/fonts/Geist-Bold.otf',
       weight: '700',
       style: 'normal',
     }
