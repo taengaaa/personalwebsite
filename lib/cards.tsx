@@ -2,13 +2,14 @@ import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { ICard, ICardsSection } from '@/types/contentful';
 import { Entry, UnresolvedLink } from 'contentful';
+import { Card } from '@/components/client-cards-section';
 
 const client = createClient({
   space: CONTENTFUL_SPACE_ID,
   accessToken: CONTENTFUL_ACCESS_TOKEN,
 });
 
-export function transformCard(item: Entry<ICard> | UnresolvedLink<"Entry">) {
+export function transformCard(item: Entry<ICard> | UnresolvedLink<"Entry">): Card | null {
   // Type guard to check if the item is a resolved Entry
   if (!('fields' in item)) {
     console.error('Card is not resolved:', item);
@@ -38,7 +39,7 @@ export function transformCard(item: Entry<ICard> | UnresolvedLink<"Entry">) {
 
 export async function getCardsSection(): Promise<{
   title: string;
-  cards: ReturnType<typeof transformCard>[];
+  cards: Card[];
 } | null> {
   try {
     const response = await client.getEntries<ICardsSection>({
@@ -51,9 +52,9 @@ export async function getCardsSection(): Promise<{
     }
 
     const section = response.items[0];
-    const cards = section.fields.cards
+    const cards = (section.fields.cards
       ?.map(transformCard)
-      .filter((card): card is NonNullable<typeof card> => card !== null) || [];
+      .filter((card): card is Card => card !== null) || []) as Card[];
 
     return {
       title: section.fields.title || '',
