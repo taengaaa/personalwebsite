@@ -15,8 +15,8 @@ import { Document } from '@contentful/rich-text-types';
  * Erstellt eine Verbindung zum Contentful CMS mit den konfigurierten Zugangsdaten
  */
 const client = createClient({
-  space: CONTENTFUL_SPACE_ID,
-  accessToken: CONTENTFUL_ACCESS_TOKEN,
+  space: CONTENTFUL_SPACE_ID as string,
+  accessToken: CONTENTFUL_ACCESS_TOKEN as string,
 });
 
 /**
