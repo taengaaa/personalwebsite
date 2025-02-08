@@ -1,4 +1,3 @@
-import React from 'react';
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { ICard, ICardsSection } from '@/types/contentful';

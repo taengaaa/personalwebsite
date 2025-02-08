@@ -1,21 +1,17 @@
 "use client";
 import React, {
   useEffect,
-  useRef,
   useState,
   createContext,
-  useContext,
   ReactNode
 } from "react";
 import {
   IconArrowNarrowLeft,
   IconArrowNarrowRight,
-  IconX,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Image, { ImageProps } from "next/image";
-import { useOutsideClick } from "@/hooks/use-outside-click";
 
 interface CarouselProps {
   items: ReactNode[];
@@ -188,11 +184,9 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
 export const Card = ({
   card,
-  index,
   layout = false,
 }: {
   card: Card;
-  index: number;
   layout?: boolean;
 }) => {
   return (
@@ -221,7 +215,7 @@ export const Card = ({
           {card.content}
         </motion.p>
       </div>
-      <BlurImage
+      <Image
         src={card.src}
         alt={card.title}
         fill
