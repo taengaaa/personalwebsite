@@ -56,13 +56,19 @@ const options = {
 };
 
 export async function generateStaticParams() {
-  const allArticles = await getAllArticles();
-  return allArticles.map((article) => ({
+  const articles = await getAllArticles(100);
+  return articles.map((article) => ({
     slug: article.slug,
   }));
 }
 
-export default async function BlogArticlePage({ params }: { params: { slug: string } }) {
+interface BlogArticlePageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function BlogArticlePage({ params }: BlogArticlePageProps) {
   const { slug } = params;
   const article = await getArticle(slug);
 
