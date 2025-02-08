@@ -2,6 +2,7 @@
 
 import { NavBar } from "@/components/ui/navbar";
 import { Timeline } from "@/components/ui/timeline";
+import Image from "next/image";
 
 const timelineData = [
   {
@@ -13,14 +14,14 @@ const timelineData = [
           Entwicklung innovativer Lösungen und kontinuierliche Weiterbildung.
         </p>
         <div className="grid grid-cols-2 gap-4">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97"
             alt="Coding Setup"
             width={500}
             height={500}
             className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
           />
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1552308995-2baac1ad5490"
             alt="Team Collaboration"
             width={500}
@@ -54,14 +55,14 @@ const timelineData = [
           </div>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1522071820081-009f0129c71c"
             alt="Team Meeting"
             width={500}
             height={500}
             className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
           />
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1531403009284-440f080d1e12"
             alt="Development Process"
             width={500}
@@ -81,14 +82,14 @@ const timelineData = [
           Erste praktische Erfahrungen durch Praktika und eigene Projekte.
         </p>
         <div className="grid grid-cols-2 gap-4">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1606761568499-6d2451b23c66"
             alt="University Campus"
             width={500}
             height={500}
             className="rounded-lg object-cover h-20 md:h-44 lg:h-60 w-full shadow-[0_0_24px_rgba(34,_42,_53,_0.06),_0_1px_1px_rgba(0,_0,_0,_0.05),_0_0_0_1px_rgba(34,_42,_53,_0.04),_0_0_4px_rgba(34,_42,_53,_0.08),_0_16px_68px_rgba(47,_48,_55,_0.05),_0_1px_0_rgba(255,_255,_255,_0.1)_inset]"
           />
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40"
             alt="Learning Process"
             width={500}

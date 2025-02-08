@@ -62,7 +62,7 @@ interface IKnowledgeArticle extends EntrySkeletonType {
  * Transformiert die Rohdaten von Contentful in ein strukturiertes Article-Objekt
  */
 function transformArticle(item: Entry<IKnowledgeArticle>): Article {
-  const getLocalizedField = (field: any): string => {
+  const getLocalizedField = (field: string | { [key: string]: string } | undefined | null): string => {
     if (typeof field === 'object' && field !== null) {
       return field['en-US'] || '';
     }
