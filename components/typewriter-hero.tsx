@@ -72,12 +72,12 @@ export default function TypewriterHero() {
             <span className={`${gradients[words[currentIndex]]} text-transparent bg-clip-text pb-1 animate-gradient bg-[length:200%_200%] bg-clip-text bg-gradient-to-r`}>
               {currentWord}
             </span>
-            <span 
+            <div 
               className={`
-                absolute -right-2 top-1/4 h-1/2 w-[3px] bg-current
+                ml-1 w-[3px] h-[1em] bg-current
                 ${showCursor ? 'opacity-100' : 'opacity-0'}
-                transition-opacity duration-100
               `}
+              style={{ marginTop: '0.1em' }}
             />
           </div>
         </div>
