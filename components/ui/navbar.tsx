@@ -54,7 +54,7 @@ export function NavBar({ activePage, className, navItems = defaultNavItems }: Na
     if (currentItem) {
       setActiveTab(currentItem.name)
     }
-  }, [pathname])
+  }, [pathname, navItems])
 
   useEffect(() => {
     const handleResize = () => {
