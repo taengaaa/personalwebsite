@@ -19,10 +19,12 @@ export function ProjectCard({ project, gradientColor }: ProjectCardProps) {
             <p className="text-gray-600">{project.subtitle}</p>
           </div>
           <Link
-            href={`/project/${project.id}`}
+            href={project.url || `/project/${project.id}`}
             className="text-gray-400 hover:text-gray-900 transition-colors flex items-center gap-1 group"
+            target={project.url ? "_blank" : undefined}
+            rel={project.url ? "noopener noreferrer" : undefined}
           >
-            <span className="text-sm">View Project</span>
+            <span className="text-sm">Zum Projekt</span>
             <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
@@ -59,4 +61,3 @@ export function ProjectCard({ project, gradientColor }: ProjectCardProps) {
     </div>
   )
 }
-

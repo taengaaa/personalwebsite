@@ -8,5 +8,5 @@ export interface Project {
   }[]
   additionalTags: number
   image: string
+  url?: string
 }
-

@@ -12,7 +12,8 @@ const DEMO_PROJECTS: Project[] = [
       { name: "Marketing Materials", color: "blue" },
     ],
     additionalTags: 1,
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l6ao8db6PdIWf4lQzG5xjnKV2krjrl.png",
+    image: "/re-kochbuch.png",
+    url: "https://re-kochbuch.vercel.app/docs/einfuehrung"
   },
   {
     id: "pont",
@@ -24,7 +25,8 @@ const DEMO_PROJECTS: Project[] = [
       { name: "Development", color: "light-blue" },
     ],
     additionalTags: 3,
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l6ao8db6PdIWf4lQzG5xjnKV2krjrl.png",
+    image: "/re-kochbuch.png",
+    url: "https://re-kochbuch.vercel.app/docs/einfuehrung"
   },
   {
     id: "nibble-2",
@@ -36,7 +38,8 @@ const DEMO_PROJECTS: Project[] = [
       { name: "Mobile Development", color: "blue" },
     ],
     additionalTags: 2,
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l6ao8db6PdIWf4lQzG5xjnKV2krjrl.png",
+    image: "/re-kochbuch.png",
+    url: "https://re-kochbuch.vercel.app/docs/einfuehrung"
   },
   {
     id: "pont-2",
@@ -48,7 +51,8 @@ const DEMO_PROJECTS: Project[] = [
       { name: "Analytics", color: "light-blue" },
     ],
     additionalTags: 1,
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-l6ao8db6PdIWf4lQzG5xjnKV2krjrl.png",
+    image: "/re-kochbuch.png",
+    url: "https://re-kochbuch.vercel.app/docs/einfuehrung"
   },
 ]
 
