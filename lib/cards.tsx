@@ -40,9 +40,6 @@ export async function getCardsSection(): Promise<{
       include: 2,
     });
 
-    // Add revalidation time of 20 seconds
-    const revalidate = { next: { revalidate: 20 } };
-
     if (response.items.length === 0) {
       return null;
     }
@@ -59,3 +56,5 @@ export async function getCardsSection(): Promise<{
     return null;
   }
 }
+
+export const revalidate = 20; // revalidate every 20 seconds
