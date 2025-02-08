@@ -2,10 +2,20 @@
 
 import { useState, useEffect } from "react"
 
-const words = ["User-Experience", "Kunde", "Architektur", "Product-Manager", "Developer", "Projektleiter", "Product Owner"]
+const words = [
+  "User-Experience",
+  "Kunde",
+  "Architektur",
+  "Product-Manager",
+  "Developer",
+  "Projektleiter",
+  "Product Owner"
+] as const
+
+type Word = typeof words[number]
 
 // Define gradient classes for each word
-const gradients = {
+const gradients: Record<Word, string> = {
   "User-Experience": "bg-gradient-to-r from-pink-500 to-violet-500",
   "Kunde": "bg-gradient-to-r from-orange-500 to-amber-500",
   "Architektur": "bg-gradient-to-r from-indigo-500 to-purple-500",
