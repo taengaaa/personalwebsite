@@ -44,7 +44,6 @@ const navItems: NavItem[] = [
 export function NavBar({ activePage, className }: NavBarProps) {
   const pathname = usePathname()
   const [activeTab, setActiveTab] = useState(activePage || pathname)
-  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
     const currentItem = navItems.find(item => 
@@ -58,12 +57,11 @@ export function NavBar({ activePage, className }: NavBarProps) {
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
+      window.removeEventListener("resize", handleResize)
     }
 
-    handleResize()
     window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    return handleResize
   }, [])
 
   return (

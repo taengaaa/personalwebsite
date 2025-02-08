@@ -1,7 +1,6 @@
 "use client";
 
 import { NavBar } from "@/components/ui/navbar";
-import { Home, User, BookOpen, Briefcase } from "lucide-react";
 
 export default function ProjektePage() {
   return (

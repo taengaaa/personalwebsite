@@ -19,11 +19,6 @@ import { useOutsideClick } from "@/hooks/use-outside-click";
 interface CarouselProps {
   items: JSX.Element[];
   initialScroll?: number;
-  navItems: {
-    name: string;
-    url: string;
-    icon: React.ComponentType;
-  }[];
 }
 
 type Card = {
@@ -41,7 +36,7 @@ export const CarouselContext = createContext<{
   currentIndex: 0,
 });
 
-export const Carousel = ({ items, initialScroll = 0, navItems }: CarouselProps) => {
+export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
   const carouselRef = React.useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);

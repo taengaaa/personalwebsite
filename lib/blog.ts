@@ -7,7 +7,6 @@
  */
 
 import { createClient } from 'contentful';
-import type { EntryCollection } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 
 /**
@@ -41,7 +40,7 @@ interface Article {
   slug: string;
   summary: string;
   details: {
-    json: any;
+    json: Record<string, unknown>;
   };
   date: string;
   authorName: string;
@@ -57,7 +56,7 @@ interface Article {
  * @param item - Rohdaten eines Artikels von Contentful
  * @returns Ein formatiertes Article-Objekt
  */
-function transformArticle(item: any): Article {
+function transformArticle(item: Record<string, unknown>): Article {
   return {
     sys: { id: item.sys.id },
     title: item.fields.title,
@@ -82,7 +81,7 @@ function transformArticle(item: any): Article {
  * @returns Ein Array von Article-Objekten, sortiert nach Datum (neueste zuerst)
  */
 export async function getAllArticles(limit = 6): Promise<Article[]> {
-  const response = await client.getEntries<any>({
+  const response = await client.getEntries<Record<string, unknown>>({
     content_type: 'knowledgeArticle',
     limit,
     order: ['-fields.date'] as const,
