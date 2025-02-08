@@ -62,13 +62,12 @@ export async function generateStaticParams() {
   }));
 }
 
-interface BlogArticlePageProps {
-  params: {
-    slug: string;
-  };
+type Props = {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export default async function BlogArticlePage({ params }: BlogArticlePageProps) {
+export default async function BlogArticlePage({ params, searchParams }: Props) {
   const { slug } = params;
   const article = await getArticle(slug);
 
