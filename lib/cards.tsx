@@ -1,14 +1,20 @@
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { ICard, ICardsSection } from '@/types/contentful';
-import { Entry } from 'contentful';
+import { Entry, UnresolvedLink } from 'contentful';
 
 const client = createClient({
   space: CONTENTFUL_SPACE_ID,
   accessToken: CONTENTFUL_ACCESS_TOKEN,
 });
 
-export function transformCard(item: Entry<ICard>) {
+export function transformCard(item: Entry<ICard> | UnresolvedLink<"Entry">) {
+  // Type guard to check if the item is a resolved Entry
+  if (!('fields' in item)) {
+    console.error('Card is not resolved:', item);
+    return null;
+  }
+
   const { fields } = item;
   
   // Get the image URL if it exists and is resolved
@@ -45,7 +51,9 @@ export async function getCardsSection(): Promise<{
     }
 
     const section = response.items[0];
-    const cards = section.fields.cards?.map(transformCard) || [];
+    const cards = section.fields.cards
+      ?.map(transformCard)
+      .filter((card): card is NonNullable<typeof card> => card !== null) || [];
 
     return {
       title: section.fields.title || '',
