@@ -16,9 +16,10 @@ interface NavItem {
 interface NavBarProps {
   activePage?: string
   className?: string
+  navItems?: NavItem[]
 }
 
-const navItems: NavItem[] = [
+export const defaultNavItems: NavItem[] = [
   {
     name: "Home",
     url: "/",
@@ -41,7 +42,7 @@ const navItems: NavItem[] = [
   },
 ]
 
-export function NavBar({ activePage, className }: NavBarProps) {
+export function NavBar({ activePage, className, navItems = defaultNavItems }: NavBarProps) {
   const pathname = usePathname()
   const [activeTab, setActiveTab] = useState(activePage || pathname)
 
