@@ -12,8 +12,8 @@ export function transformCard(item: Entry<ICard>) {
   const { fields } = item;
   
   // Get the image URL if it exists and is resolved
-  const imageUrl = fields.image && 'fields' in fields.image 
-    ? `https:${fields.image.fields.file?.url || ''}`
+  const imageUrl = fields.image && 'fields' in fields.image && fields.image.fields
+    ? `https:${fields.image.fields.file?.url ?? ''}`
     : '';
   
   return {
