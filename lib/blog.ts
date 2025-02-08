@@ -87,7 +87,10 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
     
     if ('en-US' in asset) {
       const localizedAsset = asset['en-US'];
-      return localizedAsset?.fields?.file?.url || '';
+      if (localizedAsset && 'fields' in localizedAsset) {
+        return localizedAsset.fields?.file?.url || '';
+      }
+      return '';
     }
     
     if ('fields' in asset) {
