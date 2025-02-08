@@ -37,26 +37,21 @@ export async function getCardsSection(): Promise<{
   try {
     const response = await client.getEntries<ICardsSection>({
       content_type: 'cardsSection',
-      limit: 1,
       include: 2,
     });
 
-    if (!response.items.length) {
+    // Add revalidation time of 20 seconds
+    const revalidate = { next: { revalidate: 20 } };
+
+    if (response.items.length === 0) {
       return null;
     }
 
     const section = response.items[0];
-    const cards = section.fields.cards.map((cardLink) => {
-      // Type guard to check if the cardLink is a resolved Entry
-      if (!cardLink || !('fields' in cardLink)) {
-        console.error('Card link is not resolved:', cardLink);
-        return null;
-      }
-      return transformCard(cardLink as Entry<ICard>);
-    }).filter((card): card is NonNullable<typeof card> => card !== null);
+    const cards = section.fields.cards?.map(transformCard) || [];
 
     return {
-      title: section.fields.title || 'Meine Expertise im Überblick',
+      title: section.fields.title || '',
       cards,
     };
   } catch (error) {
