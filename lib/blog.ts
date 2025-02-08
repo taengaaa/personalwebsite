@@ -9,7 +9,7 @@
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { Document } from '@contentful/rich-text-types';
-import type { ChainModifiers, Entry, EntryFieldTypes, EntrySkeletonType } from 'contentful';
+import type { Entry, EntryFieldTypes, EntrySkeletonType } from 'contentful';
 
 /**
  * Initialisierung des Contentful Clients
