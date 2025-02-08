@@ -33,7 +33,7 @@ export function ProjectDrawer({ project, isOpen, onClose }: ProjectDrawerProps) 
                 <Drawer.Title className="text-2xl font-semibold">{project.title}</Drawer.Title>
               </div>
 
-              <div className="grid grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Left column - Project information */}
                 <div className="space-y-6">
                   <p className="text-gray-600">{project.subtitle}</p>

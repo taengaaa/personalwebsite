@@ -6,6 +6,8 @@ const DEMO_PROJECTS: Project[] = [
     id: "nibble",
     title: "Nibble",
     subtitle: "AI Driven Delivery App",
+    description: "An innovative AI-powered delivery application that revolutionizes the way food is ordered and delivered.",
+    date: "2024",
     tags: [
       { name: "App Design", color: "purple" },
       { name: "Branding", color: "orange" },
@@ -19,6 +21,8 @@ const DEMO_PROJECTS: Project[] = [
     id: "pont",
     title: "Pont",
     subtitle: "Healthcare Technology Platform",
+    description: "A comprehensive healthcare technology platform designed to streamline patient care and medical processes.",
+    date: "2023",
     tags: [
       { name: "Website Design", color: "blue" },
       { name: "Product Design", color: "red" },
@@ -32,6 +36,8 @@ const DEMO_PROJECTS: Project[] = [
     id: "nibble-2",
     title: "Nibble Mobile",
     subtitle: "Food Delivery Mobile App",
+    description: "A mobile application designed to provide users with a seamless food delivery experience.",
+    date: "2024",
     tags: [
       { name: "App Design", color: "purple" },
       { name: "UI/UX", color: "orange" },
@@ -45,6 +51,8 @@ const DEMO_PROJECTS: Project[] = [
     id: "pont-2",
     title: "Pont Analytics",
     subtitle: "Healthcare Data Platform",
+    description: "A data analytics platform designed to provide healthcare professionals with valuable insights and data-driven decision making tools.",
+    date: "2023",
     tags: [
       { name: "Data Visualization", color: "blue" },
       { name: "Dashboard Design", color: "red" },
