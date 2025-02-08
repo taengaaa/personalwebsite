@@ -14,7 +14,7 @@ interface ClientCardsSectionProps {
 }
 
 export default function ClientCardsSection({ title, cards }: ClientCardsSectionProps) {
-  const cardComponents = cards.map((card, index) => (
+  const cardComponents = cards.map((card) => (
     <Card key={card.src} card={card} layout={true} />
   ));
 
