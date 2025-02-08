@@ -69,13 +69,20 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
     return field || '';
   };
 
+  const getLocalizedDocument = (field: Document | { [x: string]: Document | undefined } | undefined): Document => {
+    if (typeof field === 'object' && field !== null && 'en-US' in field) {
+      return field['en-US'] || { nodeType: 'document', content: [], data: {} };
+    }
+    return field as Document || { nodeType: 'document', content: [], data: {} };
+  };
+
   return {
     sys: { id: item.sys.id },
     title: getLocalizedField(item.fields.title),
     slug: getLocalizedField(item.fields.slug),
     summary: getLocalizedField(item.fields.summary),
     details: {
-      json: item.fields.details
+      json: getLocalizedDocument(item.fields.details)
     },
     date: getLocalizedField(item.fields.date),
     authorName: getLocalizedField(item.fields.authorName),
