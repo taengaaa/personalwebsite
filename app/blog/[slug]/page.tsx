@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link"; 
 import { notFound } from "next/navigation";
 import { NavBar } from "@/components/ui/navbar";
+import { PageProps } from "@/types/page";
 
 // Rich Text Rendering Optionen
 const options = {
@@ -62,12 +63,9 @@ export async function generateStaticParams() {
   }));
 }
 
-type Props = {
-  params: { slug: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
-}
-
-export default async function BlogArticlePage({ params }: Props) {
+export default async function BlogArticlePage({
+  params,
+}: PageProps<{ slug: string }>) {
   const { slug } = params;
   const article = await getArticle(slug);
 
