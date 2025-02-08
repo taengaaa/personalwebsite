@@ -6,7 +6,6 @@ import Image from "next/image";
 import Link from "next/link"; 
 import { notFound } from "next/navigation";
 import { NavBar } from "@/components/ui/navbar";
-import { PageProps } from "@/types/page";
 
 // Rich Text Rendering Optionen
 const options = {
