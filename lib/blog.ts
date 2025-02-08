@@ -8,7 +8,7 @@
 
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
-import { Document } from '@contentful/rich-text-types';
+import { Document, BLOCKS } from '@contentful/rich-text-types';
 import type { Entry, EntryFieldTypes, EntrySkeletonType } from 'contentful';
 
 /**
@@ -70,10 +70,16 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
   };
 
   const getLocalizedDocument = (field: Document | { [x: string]: Document | undefined } | undefined): Document => {
+    const emptyDocument: Document = {
+      nodeType: BLOCKS.DOCUMENT,
+      content: [],
+      data: {}
+    };
+
     if (typeof field === 'object' && field !== null && 'en-US' in field) {
-      return field['en-US'] || { nodeType: 'document', content: [], data: {} };
+      return field['en-US'] || emptyDocument;
     }
-    return field as Document || { nodeType: 'document', content: [], data: {} };
+    return (field as Document) || emptyDocument;
   };
 
   return {
