@@ -9,7 +9,7 @@
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { Document, BLOCKS } from '@contentful/rich-text-types';
-import type { Entry, EntryFieldTypes, Asset, UnresolvedLink, EntrySkeletonType } from 'contentful';
+import type { Entry, EntryFieldTypes, Asset, UnresolvedLink, EntrySkeletonType, AssetFile } from 'contentful';
 
 /**
  * Initialisierung des Contentful Clients
@@ -88,13 +88,13 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
     if ('en-US' in asset) {
       const localizedAsset = asset['en-US'];
       if (localizedAsset && 'fields' in localizedAsset) {
-        return localizedAsset.fields?.file?.url || '';
+        return (localizedAsset.fields?.file?.url as string) || '';
       }
       return '';
     }
     
     if ('fields' in asset) {
-      return asset.fields?.file?.url || '';
+      return (asset.fields?.file?.url as string) || '';
     }
     
     return '';
