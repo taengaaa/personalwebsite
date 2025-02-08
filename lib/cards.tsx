@@ -47,8 +47,9 @@ export async function getCardsSection(): Promise<{
 
     const section = response.items[0];
     const cards = section.fields.cards.map((cardLink) => {
-      if (!cardLink?.fields) {
-        console.error('Card link fields are missing:', cardLink);
+      // Type guard to check if the cardLink is a resolved Entry
+      if (!cardLink || !('fields' in cardLink)) {
+        console.error('Card link is not resolved:', cardLink);
         return null;
       }
       return transformCard(cardLink as Entry<ICard>);
