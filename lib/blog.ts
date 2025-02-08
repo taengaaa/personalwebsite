@@ -8,6 +8,7 @@
 
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
+import { Document } from '@contentful/rich-text-types';
 
 /**
  * Initialisierung des Contentful Clients
@@ -40,7 +41,7 @@ interface Article {
   slug: string;
   summary: string;
   details: {
-    json: Record<string, unknown>;
+    json: Document;
   };
   date: string;
   authorName: string;
