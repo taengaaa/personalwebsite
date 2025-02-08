@@ -44,8 +44,8 @@ export function ProjectCard({ project, gradientColor }: ProjectCardProps) {
           <div
             className={`absolute inset-0 z-10 ${
               gradientColor === "orange"
-                ? "bg-[radial-gradient(circle_at_center_bottom,rgba(251,146,60,0.4)_0%,rgba(251,146,60,0.1)_50%,transparent_100%)]"
-                : "bg-[radial-gradient(circle_at_center_bottom,rgba(96,165,250,0.4)_0%,rgba(96,165,250,0.1)_50%,transparent_100%)]"
+                ? "bg-gradient-to-t from-orange-400/40 via-orange-400/10 to-transparent"
+                : "bg-gradient-to-t from-blue-400/40 via-blue-400/10 to-transparent"
             }`}
           />
           <div className="relative aspect-[16/9] overflow-hidden rounded-lg">
