@@ -64,15 +64,15 @@ interface IKnowledgeArticle extends EntrySkeletonType {
 function transformArticle(item: Entry<IKnowledgeArticle>): Article {
   return {
     sys: { id: item.sys.id },
-    title: item.fields.title,
-    slug: item.fields.slug,
-    summary: item.fields.summary,
+    title: typeof item.fields.title === 'object' ? item.fields.title['en-US'] || '' : item.fields.title,
+    slug: typeof item.fields.slug === 'object' ? item.fields.slug['en-US'] || '' : item.fields.slug,
+    summary: typeof item.fields.summary === 'object' ? item.fields.summary['en-US'] || '' : item.fields.summary,
     details: {
       json: item.fields.details
     },
-    date: item.fields.date,
-    authorName: item.fields.authorName,
-    categoryName: item.fields.categoryName,
+    date: typeof item.fields.date === 'object' ? item.fields.date['en-US'] || '' : item.fields.date,
+    authorName: typeof item.fields.authorName === 'object' ? item.fields.authorName['en-US'] || '' : item.fields.authorName,
+    categoryName: typeof item.fields.categoryName === 'object' ? item.fields.categoryName['en-US'] || '' : item.fields.categoryName,
     articleImage: {
       url: item.fields.articleImage?.fields?.file?.url || ''
     }
