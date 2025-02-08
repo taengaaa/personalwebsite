@@ -11,10 +11,15 @@ const client = createClient({
 export function transformCard(item: Entry<ICard>) {
   const { fields } = item;
   
+  // Get the image URL if it exists and is resolved
+  const imageUrl = fields.image && 'fields' in fields.image 
+    ? `https:${fields.image.fields.file?.url || ''}`
+    : '';
+  
   return {
     category: String(fields.category || ''),
     title: String(fields.title || ''),
-    src: fields.image?.fields?.file?.url ? `https:${fields.image.fields.file.url}` : '',
+    src: imageUrl,
     content: String(fields.description || ''),
   };
 }
