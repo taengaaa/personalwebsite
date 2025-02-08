@@ -9,6 +9,7 @@
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { Document } from '@contentful/rich-text-types';
+import type { ChainModifiers, Entry, EntryFieldTypes, EntrySkeletonType } from 'contentful';
 
 /**
  * Initialisierung des Contentful Clients
@@ -22,16 +23,6 @@ const client = createClient({
 /**
  * Interface für einen Blog-Artikel
  * Definiert die Struktur eines Artikels wie er von Contentful empfangen wird
- * 
- * @property sys.id - Eindeutige ID des Artikels in Contentful
- * @property title - Titel des Artikels
- * @property slug - URL-freundlicher Identifier des Artikels
- * @property summary - Kurze Zusammenfassung des Artikels
- * @property details - Hauptinhalt des Artikels im Rich-Text-Format
- * @property date - Veröffentlichungsdatum
- * @property authorName - Name des Autors
- * @property categoryName - Kategorie des Artikels
- * @property articleImage - Hauptbild des Artikels mit URL
  */
 interface Article {
   sys: {
@@ -51,39 +42,26 @@ interface Article {
   };
 }
 
-interface ContentfulSys {
-  id: string;
+interface IKnowledgeArticleFields {
+  title: EntryFieldTypes.Text;
+  slug: EntryFieldTypes.Text;
+  summary: EntryFieldTypes.Text;
+  details: EntryFieldTypes.RichText;
+  date: EntryFieldTypes.Date;
+  authorName: EntryFieldTypes.Text;
+  categoryName: EntryFieldTypes.Text;
+  articleImage: EntryFieldTypes.AssetLink;
 }
 
-interface ContentfulFields {
-  title: string;
-  slug: string;
-  summary: string;
-  details: Document;
-  date: string;
-  authorName: string;
-  categoryName: string;
-  articleImage: {
-    fields: {
-      file: {
-        url: string;
-      }
-    }
-  };
-}
-
-interface ContentfulEntry {
-  sys: ContentfulSys;
-  fields: ContentfulFields;
+interface IKnowledgeArticle extends EntrySkeletonType {
+  contentTypeId: 'knowledgeArticle'
+  fields: IKnowledgeArticleFields
 }
 
 /**
  * Transformiert die Rohdaten von Contentful in ein strukturiertes Article-Objekt
- * 
- * @param item - Rohdaten eines Artikels von Contentful
- * @returns Ein formatiertes Article-Objekt
  */
-function transformArticle(item: ContentfulEntry): Article {
+function transformArticle(item: Entry<IKnowledgeArticle>): Article {
   return {
     sys: { id: item.sys.id },
     title: item.fields.title,
@@ -96,7 +74,7 @@ function transformArticle(item: ContentfulEntry): Article {
     authorName: item.fields.authorName,
     categoryName: item.fields.categoryName,
     articleImage: {
-      url: item.fields.articleImage.fields.file.url
+      url: item.fields.articleImage?.fields?.file?.url || ''
     }
   };
 }
@@ -108,12 +86,12 @@ function transformArticle(item: ContentfulEntry): Article {
  * @returns Ein Array von Article-Objekten, sortiert nach Datum (neueste zuerst)
  */
 export async function getAllArticles(limit = 6): Promise<Article[]> {
-  const response = await client.getEntries<ContentfulEntry>({
+  const response = await client.getEntries<IKnowledgeArticle>({
     content_type: 'knowledgeArticle',
     limit,
     order: ['-fields.date'] as const,
   });
-  
+
   return response.items.map(transformArticle);
 }
 
@@ -124,11 +102,11 @@ export async function getAllArticles(limit = 6): Promise<Article[]> {
  * @returns Ein Artikel-Objekt oder null, wenn kein Artikel gefunden wurde
  */
 export async function getArticle(slug: string): Promise<Article | null> {
-  const response = await client.getEntries({
+  const response = await client.getEntries<IKnowledgeArticle>({
     content_type: 'knowledgeArticle',
     'fields.slug': slug,
     limit: 1,
   });
 
-  return response.items.length > 0 ? transformArticle(response.items[0] as ContentfulEntry) : null;
+  return response.items.length > 0 ? transformArticle(response.items[0]) : null;
 }
