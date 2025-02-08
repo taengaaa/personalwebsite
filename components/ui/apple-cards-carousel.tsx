@@ -68,8 +68,9 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (carouselRef.current) {
-        const scrollLeft = carouselRef.current.scrollLeft;
+      const carousel = carouselRef.current;
+      if (carousel) {
+        const scrollLeft = carousel.scrollLeft;
         const cardWidth = 384;
         const gap = 8;
         const newIndex = Math.round(scrollLeft / (cardWidth + gap));
@@ -77,8 +78,11 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
       }
     };
 
-    carouselRef.current?.addEventListener("scroll", handleScroll);
-    return () => carouselRef.current?.removeEventListener("scroll", handleScroll);
+    const carousel = carouselRef.current;
+    if (carousel) {
+      carousel.addEventListener("scroll", handleScroll);
+      return () => carousel.removeEventListener("scroll", handleScroll);
+    }
   }, []);
 
   const checkScrollability = () => {

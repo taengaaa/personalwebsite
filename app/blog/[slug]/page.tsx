@@ -64,10 +64,10 @@ export async function generateStaticParams() {
 
 type Props = {
   params: { slug: string }
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams?: { [key: string]: string | string[] | undefined }
 }
 
-export default async function BlogArticlePage({ params, searchParams }: Props) {
+export default async function BlogArticlePage({ params }: Props) {
   const { slug } = params;
   const article = await getArticle(slug);
 
