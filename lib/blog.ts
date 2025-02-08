@@ -62,17 +62,24 @@ interface IKnowledgeArticle extends EntrySkeletonType {
  * Transformiert die Rohdaten von Contentful in ein strukturiertes Article-Objekt
  */
 function transformArticle(item: Entry<IKnowledgeArticle>): Article {
+  const getLocalizedField = (field: any): string => {
+    if (typeof field === 'object' && field !== null) {
+      return field['en-US'] || '';
+    }
+    return field || '';
+  };
+
   return {
     sys: { id: item.sys.id },
-    title: typeof item.fields.title === 'object' ? item.fields.title['en-US'] || '' : item.fields.title,
-    slug: typeof item.fields.slug === 'object' ? item.fields.slug['en-US'] || '' : item.fields.slug,
-    summary: typeof item.fields.summary === 'object' ? item.fields.summary['en-US'] || '' : item.fields.summary,
+    title: getLocalizedField(item.fields.title),
+    slug: getLocalizedField(item.fields.slug),
+    summary: getLocalizedField(item.fields.summary),
     details: {
       json: item.fields.details
     },
-    date: typeof item.fields.date === 'object' ? item.fields.date['en-US'] || '' : item.fields.date,
-    authorName: typeof item.fields.authorName === 'object' ? item.fields.authorName['en-US'] || '' : item.fields.authorName,
-    categoryName: typeof item.fields.categoryName === 'object' ? item.fields.categoryName['en-US'] || '' : item.fields.categoryName,
+    date: getLocalizedField(item.fields.date),
+    authorName: getLocalizedField(item.fields.authorName),
+    categoryName: getLocalizedField(item.fields.categoryName),
     articleImage: {
       url: item.fields.articleImage?.fields?.file?.url || ''
     }
