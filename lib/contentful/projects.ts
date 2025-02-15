@@ -1,4 +1,4 @@
-import { createClient, Entry, Asset, ChainModifiers, EntrySkeletonType } from 'contentful';
+import { createClient, Entry, Asset, EntrySkeletonType } from 'contentful';
 import type { Project } from '../../types/project';
 
 const client = createClient({
