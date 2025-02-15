@@ -73,12 +73,11 @@ export function ProjectCard({ project, uiConfig, gradientColor }: ProjectCardPro
   // Generate deterministic colors for tags
   const tagColorMap = useMemo(() => 
     assignTagColors(project.tags || [], tagColors),
-    [project.tags]
+    [project.tags, tagColors]
   );
 
-  // Get the image URL and project URL
+  // Get the image URL
   const imageUrl = project.projectImage?.fields?.file?.url;
-  const { url: projectUrl, text: linkText } = project.projectUrl?.fields || {};
 
   return (
     <>

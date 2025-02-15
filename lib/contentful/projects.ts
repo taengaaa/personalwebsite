@@ -1,6 +1,5 @@
 import { createClient } from 'contentful';
 import type { Project } from '../../types/project';
-import type { Asset, UnresolvedLink, AssetFields } from 'contentful';
 
 const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID!,
@@ -8,30 +7,109 @@ const client = createClient({
   environment: 'master',
 });
 
-function transformAsset(assetEntry: any) {
-  if (!assetEntry || !assetEntry.fields) {
+interface ContentfulAssetFile {
+  fields: {
+    file: {
+      url: string;
+      details?: {
+        image?: {
+          width: number;
+          height: number;
+        };
+      };
+    };
+    title?: string;
+    description?: string;
+  };
+}
+
+interface ContentfulAsset {
+  fields: {
+    title?: string;
+    description?: string;
+    image?: ContentfulAssetFile;
+    file?: {
+      url: string;
+      details?: {
+        image?: {
+          width: number;
+          height: number;
+        };
+      };
+    };
+  };
+}
+
+interface ContentfulUrl {
+  fields: {
+    buttonText?: string;
+    projectUrl?: string;
+    linkType?: string;
+  };
+}
+
+interface TransformedAsset {
+  fields: {
+    title: string;
+    description: string;
+    file: {
+      url: string;
+      details: {
+        image?: {
+          width: number;
+          height: number;
+        };
+      };
+    };
+  };
+}
+
+interface TransformedUrl {
+  fields: {
+    text: string;
+    url: string;
+    openInNewTab: boolean;
+  };
+}
+
+function isContentfulAsset(value: unknown): value is ContentfulAsset {
+  return typeof value === 'object' && 
+         value !== null && 
+         'fields' in value;
+}
+
+function isContentfulUrl(value: unknown): value is ContentfulUrl {
+  return typeof value === 'object' && 
+         value !== null && 
+         'fields' in value;
+}
+
+function transformAsset(assetEntry: unknown): TransformedAsset | undefined {
+  if (!isContentfulAsset(assetEntry)) {
     console.log('Invalid asset entry:', assetEntry);
     return undefined;
   }
 
   // Handle the case where the image is nested in an 'image' field
-  const asset = assetEntry.fields.image || assetEntry;
+  const fields = assetEntry.fields;
+  const assetFields = fields.image?.fields || fields;
+  const file = assetFields.file;
   
-  if (!asset || !asset.fields || !asset.fields.file) {
-    console.log('Asset has no file:', asset);
+  if (!file) {
+    console.log('Asset has no file:', assetFields);
     return undefined;
   }
 
   return {
     fields: {
-      title: asset.fields.title || '',
-      description: asset.fields.description || '',
+      title: assetFields.title || '',
+      description: assetFields.description || '',
       file: {
-        url: asset.fields.file.url,
+        url: file.url,
         details: {
-          image: asset.fields.file.details?.image ? {
-            width: asset.fields.file.details.image.width,
-            height: asset.fields.file.details.image.height
+          image: file.details?.image ? {
+            width: file.details.image.width,
+            height: file.details.image.height
           } : undefined
         }
       }
@@ -39,8 +117,8 @@ function transformAsset(assetEntry: any) {
   };
 }
 
-function transformUrl(urlEntry: any) {
-  if (!urlEntry || !urlEntry.fields) {
+function transformUrl(urlEntry: unknown): TransformedUrl | undefined {
+  if (!isContentfulUrl(urlEntry)) {
     console.log('Invalid URL entry:', urlEntry);
     return undefined;
   }
@@ -88,7 +166,7 @@ export async function getProjects(): Promise<Project[]> {
         subtitleRight: item.fields.subtitleRight,
         description: item.fields.description,
         tags: item.fields.tags || [],
-        projectImage: projectImage,
+        projectImage,
         projectUrl: projectUrl!
       };
 
@@ -105,8 +183,7 @@ export async function getProjects(): Promise<Project[]> {
 export const defaultTagColors: Record<string, "purple" | "orange" | "blue" | "red" | "light-blue"> = {
   "Development": "blue",
   "Design": "purple",
-  "Marketing": "orange",
-  "UI/UX": "red",
-  "Mobile": "light-blue",
-  // Add more mappings as needed
+  "Frontend": "orange",
+  "Backend": "red",
+  "Mobile": "light-blue"
 };

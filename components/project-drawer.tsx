@@ -5,6 +5,7 @@ import { ArrowUpRight, X } from "lucide-react";
 import { Tag } from "./tag";
 import type { Project } from "@/types/project";
 import { VisuallyHidden } from "./visually-hidden";
+import Image from 'next/image';
 
 interface ProjectDrawerProps {
   project: Project & { tagColors?: Record<string, "purple" | "orange" | "blue" | "red" | "light-blue"> }
@@ -77,10 +78,13 @@ export function ProjectDrawer({ project, isOpen, onClose }: ProjectDrawerProps) 
 
                 {project.projectImage?.fields?.file?.url && (
                   <div className="relative aspect-video w-full overflow-hidden rounded-xl mt-8">
-                    <img
+                    <Image
                       src={`https:${project.projectImage.fields.file.url}`}
                       alt={project.projectImage.fields.title || project.title}
-                      className="object-cover w-full h-full"
+                      className="object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      priority
                     />
                   </div>
                 )}
