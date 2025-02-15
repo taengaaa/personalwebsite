@@ -1,4 +1,4 @@
-import { createClient } from 'contentful';
+import { createClient, Entry, Asset, ChainModifiers, EntrySkeletonType } from 'contentful';
 import type { Project } from '../../types/project';
 
 const client = createClient({
@@ -72,22 +72,31 @@ interface TransformedUrl {
   };
 }
 
-interface ContentfulProjectFields {
+interface ProjectUrlFields {
+  buttonText?: string;
+  projectUrl?: string;
+  linkType?: string;
+}
+
+interface ProjectUrlSkeleton extends EntrySkeletonType {
+  contentTypeId: 'projectUrl';
+  fields: ProjectUrlFields;
+}
+
+interface ProjectFields {
   title: string;
   internalName: string;
   subtitleLeft?: string;
   subtitleRight?: string;
   description: string;
-  tags?: string[];
-  projectImage?: ContentfulAsset;
-  projectUrl?: ContentfulUrl;
+  tags: string[];
+  projectImage: Asset;
+  projectUrl: Entry<ProjectUrlSkeleton>;
 }
 
-interface ContentfulProjectEntry {
-  sys: {
-    id: string;
-  };
-  fields: ContentfulProjectFields;
+interface ProjectSkeleton extends EntrySkeletonType {
+  contentTypeId: 'projectCard';
+  fields: ProjectFields;
 }
 
 function isContentfulAsset(value: unknown): value is ContentfulAsset {
@@ -161,29 +170,30 @@ export async function getProjects(): Promise<Project[]> {
 
   try {
     console.log('Fetching projects from Contentful...');
-    const response = await client.getEntries<ContentfulProjectFields>({
+    const response = await client.getEntries<ProjectSkeleton>({
       content_type: 'projectCard',
       include: 2, // Include linked entries up to 2 levels deep
     });
 
-    return response.items.map((item: ContentfulProjectEntry) => {
-      console.log(`\nProcessing project: ${item.fields.title}`);
-      console.log('Raw project fields:', JSON.stringify(item.fields, null, 2));
+    return response.items.map((item) => {
+      const fields = item.fields;
+      console.log(`\nProcessing project: ${fields.title}`);
+      console.log('Raw project fields:', JSON.stringify(fields, null, 2));
       
-      const projectImage = transformAsset(item.fields.projectImage);
+      const projectImage = transformAsset(fields.projectImage);
       console.log('Transformed image:', JSON.stringify(projectImage, null, 2));
 
-      const projectUrl = transformUrl(item.fields.projectUrl);
+      const projectUrl = transformUrl(fields.projectUrl);
       console.log('Transformed URL:', JSON.stringify(projectUrl, null, 2));
 
       const project: Project = {
         id: item.sys.id,
-        internalName: item.fields.internalName,
-        title: item.fields.title,
-        subtitleLeft: item.fields.subtitleLeft,
-        subtitleRight: item.fields.subtitleRight,
-        description: item.fields.description,
-        tags: item.fields.tags || [],
+        internalName: fields.internalName,
+        title: fields.title,
+        subtitleLeft: fields.subtitleLeft,
+        subtitleRight: fields.subtitleRight,
+        description: fields.description,
+        tags: fields.tags || [],
         projectImage,
         projectUrl: projectUrl!
       };
@@ -197,7 +207,6 @@ export async function getProjects(): Promise<Project[]> {
   }
 }
 
-// Optional: Add tag color mapping based on your preferences
 export const defaultTagColors: Record<string, "purple" | "orange" | "blue" | "red" | "light-blue"> = {
   "Development": "blue",
   "Design": "purple",
