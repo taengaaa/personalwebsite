@@ -1,12 +1,9 @@
-"use client";
-
-import { NavBar } from "@/components/ui/navbar";
+import { ProjektePageWrapper } from "@/components/projekte-page-wrapper";
 import { ProjectGrid } from "@/components/project-grid";
 
-export default function ProjektePage() {
+export default async function ProjektePage() {
   return (
-    <>
-      <NavBar activePage="Projekte" />
+    <ProjektePageWrapper>
       <main className="min-h-screen bg-[#F5F5F5] pt-24">
         <div className="container max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
@@ -18,6 +15,6 @@ export default function ProjektePage() {
           <ProjectGrid />
         </div>
       </main>
-    </>
+    </ProjektePageWrapper>
   );
 }

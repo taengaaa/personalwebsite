@@ -1,6 +1,6 @@
 import { ProjectGrid } from "@/components/project-grid"
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
   return (
     <div className="min-h-screen bg-[#F5F5F5] py-16">
       <div className="container mx-auto px-4">

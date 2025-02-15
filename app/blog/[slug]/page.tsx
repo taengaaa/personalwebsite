@@ -148,13 +148,13 @@ export default async function BlogArticlePage({
           </header>
 
           {article.articleImage?.url && (
-            <div className="mb-8">
+            <div className="mb-8 h-[300px] relative">
               <Image
                 alt={article.title}
-                className="w-full rounded-lg shadow-md"
-                height={400}
+                className="rounded-lg shadow-md object-cover"
+                fill
                 src={`https:${article.articleImage.url}`}
-                width={800}
+                sizes="(max-width: 768px) 100vw, 800px"
               />
             </div>
           )}
