@@ -72,6 +72,24 @@ interface TransformedUrl {
   };
 }
 
+interface ContentfulProjectFields {
+  title: string;
+  internalName: string;
+  subtitleLeft?: string;
+  subtitleRight?: string;
+  description: string;
+  tags?: string[];
+  projectImage?: ContentfulAsset;
+  projectUrl?: ContentfulUrl;
+}
+
+interface ContentfulProjectEntry {
+  sys: {
+    id: string;
+  };
+  fields: ContentfulProjectFields;
+}
+
 function isContentfulAsset(value: unknown): value is ContentfulAsset {
   return typeof value === 'object' && 
          value !== null && 
@@ -143,12 +161,12 @@ export async function getProjects(): Promise<Project[]> {
 
   try {
     console.log('Fetching projects from Contentful...');
-    const response = await client.getEntries({
+    const response = await client.getEntries<ContentfulProjectFields>({
       content_type: 'projectCard',
       include: 2, // Include linked entries up to 2 levels deep
     });
 
-    return response.items.map((item: any) => {
+    return response.items.map((item: ContentfulProjectEntry) => {
       console.log(`\nProcessing project: ${item.fields.title}`);
       console.log('Raw project fields:', JSON.stringify(item.fields, null, 2));
       

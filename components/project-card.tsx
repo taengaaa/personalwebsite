@@ -67,14 +67,11 @@ function assignTagColors(tags: string[], availableColors: TagColor[]): Record<st
 export function ProjectCard({ project, uiConfig, gradientColor }: ProjectCardProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Available tag colors
-  const tagColors: TagColor[] = ["purple", "orange", "blue", "red", "light-blue"];
-
   // Generate deterministic colors for tags
-  const tagColorMap = useMemo(() => 
-    assignTagColors(project.tags || [], tagColors),
-    [project.tags, tagColors]
-  );
+  const tagColorMap = useMemo(() => {
+    const tagColors: TagColor[] = ["purple", "orange", "blue", "red", "light-blue"];
+    return assignTagColors(project.tags || [], tagColors);
+  }, [project.tags]);
 
   // Get the image URL
   const imageUrl = project.projectImage?.fields?.file?.url;
