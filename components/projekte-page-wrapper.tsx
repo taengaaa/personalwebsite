@@ -1,6 +1,6 @@
 'use client';
 
-import { NavBar } from "./ui/navbar";
+import { NavBar } from "./shared/navbar";
 
 export function ProjektePageWrapper({ children }: { children: React.ReactNode }) {
   return (

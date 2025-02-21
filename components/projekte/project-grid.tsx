@@ -1,6 +1,6 @@
 import { ProjectCard } from "./project-card"
-import type { Project } from "../types/project"
-import { getProjects, defaultTagColors } from "../lib/contentful/projects"
+import type { Project } from "@/types/project"
+import { getProjects, defaultTagColors } from "@/lib/contentful/projects"
 
 interface ProjectGridProps {
   projects?: Project[]

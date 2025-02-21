@@ -2,7 +2,7 @@ import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
 import { ICard, ICardsSection } from '@/types/contentful';
 import { Entry, UnresolvedLink } from 'contentful';
-import { Card } from '@/components/client-cards-section';
+import { Card } from '@/components/shared/client-cards-section';
 
 const client = createClient({
   space: CONTENTFUL_SPACE_ID,

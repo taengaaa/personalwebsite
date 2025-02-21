@@ -3,8 +3,8 @@
 import { ArrowUpRight } from "lucide-react"
 import Image from "next/image"
 import { useMemo, useState } from "react"
-import type { Project, ProjectWithUI } from "../types/project"
-import { Tag } from "./tag"
+import type { Project, ProjectWithUI } from "@/types/project"
+import { Tag } from "@/components/shared/tag"
 import { ProjectDrawer } from "./project-drawer"
 
 type TagColor = "purple" | "orange" | "blue" | "red" | "light-blue";

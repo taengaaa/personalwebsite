@@ -2,9 +2,9 @@
 
 import { Drawer } from "vaul";
 import { ArrowUpRight, X } from "lucide-react";
-import { Tag } from "./tag";
+import { Tag } from "@/components/shared/tag";
 import type { Project } from "@/types/project";
-import { VisuallyHidden } from "./visually-hidden";
+import { VisuallyHidden } from "@/components/shared/visually-hidden";
 import Image from 'next/image';
 
 interface ProjectDrawerProps {

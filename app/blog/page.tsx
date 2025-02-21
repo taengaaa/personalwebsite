@@ -1,8 +1,8 @@
 import { getAllArticles } from "@/lib/blog";
 import Image from "next/image";
 import Link from "next/link";
-import { NavBar } from "@/components/ui/navbar";
-import { Tag } from "@/components/tag";
+import { NavBar } from "@/components/shared/navbar";
+import { Tag } from "@/components/shared/tag";
 
 export default async function BlogPage() {
   const articles = await getAllArticles(6);

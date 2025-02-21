@@ -1,9 +1,9 @@
 import dynamic from 'next/dynamic';
-import { CombinedCardsSection } from "@/components/combined-cards-section";
+import { CombinedCardsSection } from "@/components/shared/combined-cards-section";
 
 // Import client components
-const NavBar = dynamic(() => import("@/components/ui/navbar").then(mod => mod.NavBar));
-const TypewriterHero = dynamic(() => import("@/components/typewriter-hero"));
+const NavBar = dynamic(() => import("@/components/shared/navbar").then(mod => mod.NavBar));
+const TypewriterHero = dynamic(() => import("@/components/home/typewriter-hero"));
 
 export default function HomePage() {
   return (

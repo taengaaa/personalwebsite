@@ -5,7 +5,7 @@ import { Block, Inline } from '@contentful/rich-text-types';
 import Image from "next/image";
 import Link from "next/link"; 
 import { notFound } from "next/navigation";
-import { NavBar } from "@/components/ui/navbar";
+import { NavBar } from "@/components/shared/navbar";
 
 // Rich Text Rendering Optionen
 const options = {

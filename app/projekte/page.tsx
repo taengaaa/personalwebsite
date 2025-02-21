@@ -1,5 +1,5 @@
 import { ProjektePageWrapper } from "@/components/projekte-page-wrapper";
-import { ProjectGrid } from "@/components/project-grid";
+import { ProjectGrid } from "@/components/projekte/project-grid";
 
 export default async function ProjektePage() {
   return (

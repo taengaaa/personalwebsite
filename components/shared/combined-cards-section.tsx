@@ -6,7 +6,7 @@ import { getCardsSection } from "@/lib/cards";
 
 // Import client components
 const ClientCardsSection = dynamic(
-  () => import("@/components/client-cards-section"),
+  () => import("@/components/shared/client-cards-section"),
   { ssr: true }
 );
 

@@ -133,7 +133,7 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
 
           <div
             className={cn(
-              "flex flex-row justify-start gap-4 pl-4",
+              "flex flex-row justify-start gap-4",
               "max-w-7xl mx-auto" 
             )}
           >
@@ -194,26 +194,27 @@ export const Card = ({
       layoutId={layout ? `card-${card.title}` : undefined}
       className="rounded-3xl bg-gray-100 dark:bg-neutral-900 h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10"
     >
+      <div className="absolute h-full top-0 inset-x-0 bg-black/30 z-20 pointer-events-none" />
       <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
-      <div className="relative z-40 p-8">
+      <div className="relative z-40 pt-8 pr-8 pb-8">
         <motion.p
           layoutId={layout ? `category-${card.category}` : undefined}
-          className="text-white text-sm md:text-base font-medium font-sans text-left"
+          className="text-white text-sm md:text-base font-medium font-sans text-left mb-2"
         >
           {card.category}
         </motion.p>
         <motion.p
-          layoutId={layout ? `title-${card.title}` : undefined}
-          className="text-white text-xl md:text-3xl font-semibold max-w-xs text-left [text-wrap:balance] font-sans mt-2"
-        >
-          {card.title}
-        </motion.p>
-        <motion.p
           layoutId={layout ? `description-${card.title}` : undefined}
-          className="text-white text-base md:text-xl max-w-xs text-left [text-wrap:balance] font-sans mt-2"
+          className="text-white text-base md:text-xl max-w-xs text-left [text-wrap:balance] font-sans mb-2"
         >
           {card.content}
         </motion.p>
+        <motion.h2
+          layoutId={layout ? `title-${card.title}` : undefined}
+          className="text-white text-xl md:text-3xl font-bold font-sans text-left"
+        >
+          {card.title}
+        </motion.h2>
       </div>
       <Image
         src={card.src}

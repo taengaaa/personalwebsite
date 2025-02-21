@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
+import { Carousel, Card } from "@/components/home/apple-cards-carousel";
 
 export interface Card {
   category: string;
