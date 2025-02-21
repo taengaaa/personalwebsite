@@ -4,7 +4,7 @@ import { Timeline } from "@/components/uebermich/timeline";
 import { getContentPage } from "@/lib/contentful/content-page";
 import { getProjects } from "@/lib/contentful/projects";
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
-import { BLOCKS, MARKS, Block } from '@contentful/rich-text-types';
+import { BLOCKS, MARKS, Block, INLINES } from '@contentful/rich-text-types';
 import Image from "next/image";
 
 export default async function UeberMichPage() {
@@ -38,35 +38,36 @@ export default async function UeberMichPage() {
 
   const richTextOptions = {
     renderNode: {
-      [BLOCKS.PARAGRAPH]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.PARAGRAPH]: (node: any, children: React.ReactNode) => (
         <p className="text-lg text-neutral-600 dark:text-neutral-400">{children}</p>
       ),
-      [BLOCKS.HEADING_1]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.HEADING_1]: (node: any, children: React.ReactNode) => (
         <h1 className="text-4xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">{children}</h1>
       ),
-      [BLOCKS.HEADING_2]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.HEADING_2]: (node: any, children: React.ReactNode) => (
         <h2 className="text-3xl font-bold text-neutral-900 dark:text-neutral-100 mb-3">{children}</h2>
       ),
-      [BLOCKS.HEADING_3]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.HEADING_3]: (node: any, children: React.ReactNode) => (
         <h3 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">{children}</h3>
       ),
-      [BLOCKS.UL_LIST]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.UL_LIST]: (node: any, children: React.ReactNode) => (
         <ul className="list-disc list-inside space-y-2 text-neutral-600 dark:text-neutral-400">{children}</ul>
       ),
-      [BLOCKS.OL_LIST]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.OL_LIST]: (node: any, children: React.ReactNode) => (
         <ol className="list-decimal list-inside space-y-2 text-neutral-600 dark:text-neutral-400">{children}</ol>
       ),
-      [BLOCKS.LIST_ITEM]: (node: Block, children: React.ReactNode) => (
+      [BLOCKS.LIST_ITEM]: (node: any, children: React.ReactNode) => (
         <li className="text-lg">{children}</li>
+      ),
+      [INLINES.HYPERLINK]: (node: any, children: React.ReactNode) => (
+        <a href={node.data.uri} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
+          {children}
+        </a>
       ),
     },
     renderMark: {
-      [MARKS.BOLD]: (text: React.ReactNode) => (
-        <span className="font-bold">{text}</span>
-      ),
-      [MARKS.ITALIC]: (text: React.ReactNode) => (
-        <span className="italic">{text}</span>
-      ),
+      [MARKS.BOLD]: (text: React.ReactNode) => <strong>{text}</strong>,
+      [MARKS.ITALIC]: (text: React.ReactNode) => <em>{text}</em>,
       [MARKS.UNDERLINE]: (text: React.ReactNode) => (
         <span className="underline">{text}</span>
       ),
