@@ -1,4 +1,5 @@
-import { createClient, Entry, Asset, EntrySkeletonType, EntryFieldTypes } from 'contentful';
+import { createClient, Entry, Asset, EntryFieldTypes } from 'contentful';
+import { Document } from '@contentful/rich-text-types';
 
 const client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID!,
@@ -48,7 +49,7 @@ export interface TimelineSection {
   internalName?: string;
   year: string;
   heading: string;
-  description: any;
+  description: Document;
   images?: {
     url: string;
     title?: string;
