@@ -30,8 +30,16 @@ const geist = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Simon Affentranger",
+  metadataBase: new URL('https://simonaffentranger.ch'),
+  title: {
+    default: "Simon Affentranger",
+    template: "%s | Simon Affentranger"
+  },
   description: "Personal Website of Simon Affentranger",
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

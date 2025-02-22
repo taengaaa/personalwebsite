@@ -39,6 +39,19 @@ interface MediaWrapperSkeleton {
   fields: MediaWrapperFields;
 }
 
+interface MetaDataFields {
+  internalName: EntryFieldTypes.Symbol;
+  metaTitle: EntryFieldTypes.Symbol;
+  metaDescription: EntryFieldTypes.Text;
+  index?: EntryFieldTypes.Boolean;
+  robots?: EntryFieldTypes.Boolean;
+}
+
+interface MetaDataSkeleton {
+  contentTypeId: 'metaData';
+  fields: MetaDataFields;
+}
+
 interface TimelineSectionFields {
   internalName?: EntryFieldTypes.Symbol;
   year: EntryFieldTypes.Symbol;
@@ -54,9 +67,10 @@ interface TimelineSectionSkeleton {
 
 interface ContentPageFields {
   internalName: EntryFieldTypes.Symbol;
-  slug: EntryFieldTypes.Symbol;
-  title: EntryFieldTypes.Symbol;
-  description: EntryFieldTypes.Text;
+  metaData: Entry<MetaDataSkeleton>;
+  slug?: EntryFieldTypes.Symbol;
+  title?: EntryFieldTypes.Symbol;
+  description?: EntryFieldTypes.Text;
   sections?: Entry<TimelineSectionSkeleton>[];
 }
 
@@ -81,9 +95,15 @@ export interface TimelineSection {
 
 export interface ContentPage {
   internalName: string;
-  slug: string;
-  title: string;
-  description: string;
+  metaData: {
+    title: string;
+    description: string;
+    index?: boolean;
+    robots?: boolean;
+  };
+  slug?: string;
+  title?: string;
+  description?: string;
   sections?: TimelineSection[];
 }
 
@@ -142,6 +162,63 @@ const transformAsset = (
   };
 }
 
+const transformTimelineSection = (section: Entry<TimelineSectionSkeleton>): TimelineSection => {
+  const { fields } = section;
+
+  const processedImages = fields.images?.map(transformAsset).filter((img): img is NonNullable<typeof img> => {
+    if (!img) {
+      console.log('Image was filtered out due to transformation failure');
+      return false;
+    }
+    return true;
+  });
+
+  console.log('Processed images for section:', {
+    heading: fields.heading,
+    originalCount: fields.images?.length || 0,
+    processedCount: processedImages?.length || 0,
+    urls: processedImages?.map(img => img.url)
+  });
+
+  return {
+    internalName: fields.internalName,
+    year: fields.year,
+    heading: fields.heading,
+    description: fields.description,
+    images: processedImages,
+  };
+}
+
+const transformContentPage = (entry: Entry<ContentPageSkeleton>): ContentPage => {
+  const { fields } = entry;
+
+  console.log('Transforming content page:', {
+    internalName: fields.internalName,
+    hasMetaData: !!fields.metaData,
+    metaDataFields: fields.metaData?.fields,
+    slug: fields.slug,
+    title: fields.title,
+    description: fields.description,
+    sectionsCount: fields.sections?.length ?? 0
+  });
+
+  const metaData = {
+    title: fields.metaData?.fields?.metaTitle ?? fields.title ?? fields.internalName,
+    description: fields.metaData?.fields?.metaDescription ?? fields.description ?? '',
+    index: fields.metaData?.fields?.index ?? true,
+    robots: fields.metaData?.fields?.robots ?? true,
+  };
+
+  return {
+    internalName: fields.internalName,
+    metaData,
+    slug: fields.slug || undefined,
+    title: fields.title || undefined,
+    description: fields.description || undefined,
+    sections: fields.sections?.map(transformTimelineSection),
+  };
+};
+
 export async function getContentPage(slug: string): Promise<ContentPage | null> {
   if (!process.env.CONTENTFUL_SPACE_ID || !process.env.CONTENTFUL_ACCESS_TOKEN) {
     console.error('Contentful environment variables are not set');
@@ -150,74 +227,43 @@ export async function getContentPage(slug: string): Promise<ContentPage | null> 
 
   try {
     console.log('Fetching content page from Contentful...', { slug });
-    const entries = await client.getEntries<ContentPageSkeleton>({
+
+    const allPages = await client.getEntries<ContentPageSkeleton>({
       content_type: 'contentPage',
-      'fields.slug[match]': slug,
-      include: 3,
+      include: 10,
     });
 
-    console.log('Contentful response:', {
-      total: entries.total,
-      items: entries.items.map(item => ({
+    console.log('All content pages:', {
+      total: allPages.total,
+      pages: allPages.items.map(item => ({
         id: item.sys.id,
         internalName: item.fields.internalName,
-        slug: item.fields.slug
+        slug: item.fields.slug,
+        hasMetaData: !!item.fields.metaData,
       }))
     });
 
-    if (!entries.items.length) {
-      console.log('No content found for slug:', slug);
+    const response = await client.getEntries<ContentPageSkeleton>({
+      content_type: 'contentPage',
+      'fields.slug': slug,
+      include: 10,
+    });
+
+    console.log('Contentful response:', {
+      total: response.total,
+      hasItems: response.items.length > 0,
+      firstItem: response.items[0] ? {
+        id: response.items[0].sys.id,
+        internalName: response.items[0].fields.internalName,
+        hasMetaData: !!response.items[0].fields.metaData,
+      } : null
+    });
+
+    if (!response.items.length) {
       return null;
     }
 
-    const page = entries.items[0];
-    
-    const sections = page.fields.sections?.map((section: Entry<TimelineSectionSkeleton>) => {
-      console.log('Processing section:', {
-        id: section.sys.id,
-        heading: section.fields.heading,
-        imagesCount: section.fields.images?.length || 0
-      });
-
-      const processedImages = section.fields.images?.map(transformAsset).filter((img): img is NonNullable<typeof img> => {
-        if (!img) {
-          console.log('Image was filtered out due to transformation failure');
-          return false;
-        }
-        return true;
-      });
-
-      console.log('Processed images for section:', {
-        heading: section.fields.heading,
-        originalCount: section.fields.images?.length || 0,
-        processedCount: processedImages?.length || 0,
-        urls: processedImages?.map(img => img.url)
-      });
-
-      return {
-        internalName: section.fields.internalName,
-        year: section.fields.year,
-        heading: section.fields.heading,
-        description: section.fields.description,
-        images: processedImages,
-      };
-    }) || [];
-
-    const contentPage = {
-      internalName: page.fields.internalName,
-      slug: page.fields.slug,
-      title: page.fields.title,
-      description: page.fields.description,
-      sections: sections,
-    };
-
-    console.log('Transformed content page sections:', contentPage.sections?.map(section => ({
-      heading: section.heading,
-      imagesCount: section.images?.length || 0,
-      imageUrls: section.images?.map(img => img.url)
-    })));
-
-    return contentPage;
+    return transformContentPage(response.items[0]);
   } catch (error) {
     console.error('Error fetching content page:', error);
     return null;

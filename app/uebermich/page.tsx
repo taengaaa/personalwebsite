@@ -1,4 +1,4 @@
-// Remove "use client" since we're using Server Components
+import type { Metadata } from "next";
 import { NavBar } from "@/components/shared/navbar";
 import { Timeline } from "@/components/uebermich/timeline";
 import { getContentPage } from "@/lib/contentful/content-page";
@@ -7,28 +7,48 @@ import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, MARKS, INLINES, Node } from '@contentful/rich-text-types';
 import Image from "next/image";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const contentPage = await getContentPage('ueber-mich');
+  
+  if (!contentPage) {
+    return {
+      title: 'Über mich',
+      description: 'About Simon Affentranger',
+    };
+  }
+
+  return {
+    title: contentPage.metaData.title,
+    description: contentPage.metaData.description,
+    robots: {
+      index: contentPage.metaData.index ?? true,
+      follow: contentPage.metaData.robots ?? true,
+    },
+  };
+}
+
 export default async function UeberMichPage() {
   // First test if we can get projects to verify Contentful connection
   const projects = await getProjects();
   console.log('Projects found:', projects.length);
 
-  const contentPage = await getContentPage('ueber mich');
+  const contentPage = await getContentPage('ueber-mich');
   console.log('Content page found:', contentPage ? 'yes' : 'no');
 
   if (!contentPage) {
     return (
       <div className="min-h-screen bg-white dark:bg-neutral-900">
         <NavBar activePage="Über mich" />
-        <main className="container max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <main className="container max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-neutral-900 dark:text-neutral-100">
+            <h1 className="text-3xl md:text-5xl font-bold mb-6 text-neutral-900 dark:text-neutral-100">
               Content not found
             </h1>
             <p className="text-xl text-muted-foreground mb-12">
               Projects found: {projects.length} (testing Contentful connection)
             </p>
             <p className="text-muted-foreground">
-              Please make sure you have created a content page in Contentful with the slug &quot;ueber mich&quot;.
+              Please make sure you have created a content page in Contentful with the slug &quot;ueber-mich&quot;.
             </p>
           </div>
         </main>
@@ -127,15 +147,21 @@ export default async function UeberMichPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-neutral-900">
       <NavBar activePage="Über mich" />
-      <main className="container max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-24">
+      <main className="container max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-neutral-900 dark:text-neutral-100">
-            {contentPage.title}
-          </h1>
-          <p className="text-xl text-muted-foreground mb-12">
-            {contentPage.description}
-          </p>
-          <Timeline items={timelineItems} />
+          {contentPage.title && (
+            <h1 className="text-3xl md:text-5xl font-bold mb-6 text-neutral-900 dark:text-neutral-100">
+              {contentPage.title}
+            </h1>
+          )}
+          {contentPage.description && (
+            <p className="text-xl text-muted-foreground mb-12">
+              {contentPage.description}
+            </p>
+          )}
+          {contentPage.sections && contentPage.sections.length > 0 && (
+            <Timeline items={timelineItems} />
+          )}
         </div>
       </main>
     </div>

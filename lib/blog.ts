@@ -21,12 +21,40 @@ const client = createClient({
 });
 
 /**
+ * Interface für MetaData-Felder
+ * Definiert die Struktur von MetaData-Feldern wie sie von Contentful empfangen werden
+ */
+interface MetaDataFields {
+  internalName: EntryFieldTypes.Symbol;
+  metaTitle: EntryFieldTypes.Symbol;
+  metaDescription: EntryFieldTypes.Text;
+  index?: EntryFieldTypes.Boolean;
+  robots?: EntryFieldTypes.Boolean;
+}
+
+/**
+ * Interface für MetaData-Skeleton
+ * Definiert die Struktur von MetaData-Einträgen wie sie von Contentful empfangen werden
+ */
+interface MetaDataSkeleton {
+  contentTypeId: 'metaData';
+  fields: MetaDataFields;
+}
+
+/**
  * Interface für einen Blog-Artikel
  * Definiert die Struktur eines Artikels wie er von Contentful empfangen wird
  */
 interface Article {
   sys: {
     id: string;
+  };
+  internalName: string;
+  metaData?: {
+    title: string;
+    description: string;
+    index?: boolean;
+    robots?: boolean;
   };
   title: string;
   slug: string;
@@ -37,85 +65,82 @@ interface Article {
   date: string;
   authorName: string;
   categoryName: string;
-  articleImage: {
+  articleImage?: {
     url: string;
+    title?: string;
+    description?: string;
   };
 }
 
-interface IKnowledgeArticleFields {
-  title: EntryFieldTypes.Text;
-  slug: EntryFieldTypes.Text;
+/**
+ * Interface für KnowledgeArticle-Felder
+ * Definiert die Struktur von KnowledgeArticle-Feldern wie sie von Contentful empfangen werden
+ */
+interface KnowledgeArticleFields {
+  internalName: EntryFieldTypes.Symbol;
+  metaData?: Entry<MetaDataSkeleton>;
+  title: EntryFieldTypes.Symbol;
+  slug: EntryFieldTypes.Symbol;
   summary: EntryFieldTypes.Text;
   details: EntryFieldTypes.RichText;
   date: EntryFieldTypes.Date;
-  authorName: EntryFieldTypes.Text;
-  categoryName: EntryFieldTypes.Text;
-  articleImage: EntryFieldTypes.AssetLink;
+  authorName: EntryFieldTypes.Symbol;
+  categoryName: EntryFieldTypes.Symbol;
+  articleImage?: EntryFieldTypes.AssetLink;
 }
 
-interface IKnowledgeArticle extends EntrySkeletonType {
-  contentTypeId: 'knowledgeArticle'
-  fields: IKnowledgeArticleFields
+/**
+ * Interface für KnowledgeArticle-Skeleton
+ * Definiert die Struktur von KnowledgeArticle-Einträgen wie sie von Contentful empfangen werden
+ */
+interface KnowledgeArticleSkeleton {
+  contentTypeId: 'knowledgeArticle';
+  fields: KnowledgeArticleFields;
 }
 
 /**
  * Transformiert die Rohdaten von Contentful in ein strukturiertes Article-Objekt
  */
-function transformArticle(item: Entry<IKnowledgeArticle>): Article {
-  const getLocalizedField = (field: string | { [x: string]: string | undefined } | undefined): string => {
-    if (typeof field === 'object' && field !== null) {
-      return field['en-US'] || '';
-    }
-    return field || '';
-  };
+function transformArticle(item: Entry<KnowledgeArticleSkeleton>): Article {
+  const { fields } = item;
 
-  const getLocalizedDocument = (field: Document | { [x: string]: Document | undefined } | undefined): Document => {
-    const emptyDocument: Document = {
-      nodeType: BLOCKS.DOCUMENT,
-      content: [],
-      data: {}
-    };
+  // Get image URL if it exists
+  let articleImage;
+  if (fields.articleImage && 'fields' in fields.articleImage) {
+    const imageFields = fields.articleImage.fields as AssetFields;
+    if (imageFields.file?.url) {
+      articleImage = {
+        url: imageFields.file.url,
+        title: imageFields.title?.['en-US'] || imageFields.title || undefined,
+        description: imageFields.description?.['en-US'] || imageFields.description || undefined,
+      };
+    }
+  }
 
-    if (typeof field === 'object' && field !== null && 'en-US' in field) {
-      return field['en-US'] || emptyDocument;
-    }
-    return (field as Document) || emptyDocument;
-  };
-
-  const getAssetUrl = (asset: Asset | UnresolvedLink<'Asset'> | { [x: string]: Asset | UnresolvedLink<'Asset'> | undefined } | undefined): string => {
-    if (!asset) return '';
-    
-    if ('en-US' in asset) {
-      const localizedAsset = asset['en-US'];
-      if (localizedAsset && 'fields' in localizedAsset && localizedAsset.fields && 'file' in localizedAsset.fields) {
-        const fields = localizedAsset.fields as AssetFields;
-        return fields.file?.url || '';
-      }
-      return '';
-    }
-    
-    if ('fields' in asset && asset.fields && 'file' in asset.fields) {
-      const fields = asset.fields as AssetFields;
-      return fields.file?.url || '';
-    }
-    
-    return '';
-  };
+  // Get metadata if it exists
+  const metaData = fields.metaData ? {
+    title: fields.metaData.fields.metaTitle,
+    description: fields.metaData.fields.metaDescription,
+    index: fields.metaData.fields.index,
+    robots: fields.metaData.fields.robots,
+  } : undefined;
 
   return {
-    sys: { id: item.sys.id },
-    title: getLocalizedField(item.fields.title),
-    slug: getLocalizedField(item.fields.slug),
-    summary: getLocalizedField(item.fields.summary),
-    details: {
-      json: getLocalizedDocument(item.fields.details)
+    sys: {
+      id: item.sys.id
     },
-    date: getLocalizedField(item.fields.date),
-    authorName: getLocalizedField(item.fields.authorName),
-    categoryName: getLocalizedField(item.fields.categoryName),
-    articleImage: {
-      url: getAssetUrl(item.fields.articleImage)
-    }
+    internalName: fields.internalName,
+    metaData,
+    title: fields.title,
+    slug: fields.slug,
+    summary: fields.summary,
+    details: {
+      json: fields.details as unknown as Document
+    },
+    date: fields.date,
+    authorName: fields.authorName,
+    categoryName: fields.categoryName,
+    articleImage
   };
 }
 
@@ -126,13 +151,21 @@ function transformArticle(item: Entry<IKnowledgeArticle>): Article {
  * @returns Ein Array von Article-Objekten, sortiert nach Datum (neueste zuerst)
  */
 export async function getAllArticles(limit = 6): Promise<Article[]> {
-  const response = await client.getEntries<IKnowledgeArticle>({
-    content_type: 'knowledgeArticle',
-    limit,
-    order: ['-fields.date'] as const,
-  });
+  try {
+    const response = await client.getEntries<KnowledgeArticleSkeleton>({
+      content_type: 'knowledgeArticle',
+      order: ['-fields.date'],
+      limit,
+      include: 2
+    });
 
-  return response.items.map(transformArticle);
+    return response.items
+      .map(transformArticle)
+      .filter(article => article.slug && article.title);
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    return [];
+  }
 }
 
 /**
@@ -142,11 +175,21 @@ export async function getAllArticles(limit = 6): Promise<Article[]> {
  * @returns Ein Artikel-Objekt oder null, wenn kein Artikel gefunden wurde
  */
 export async function getArticle(slug: string): Promise<Article | null> {
-  const response = await client.getEntries<IKnowledgeArticle>({
-    content_type: 'knowledgeArticle',
-    'fields.slug': slug,
-    limit: 1,
-  });
+  try {
+    const response = await client.getEntries<KnowledgeArticleSkeleton>({
+      content_type: 'knowledgeArticle',
+      'fields.slug': slug,
+      include: 2,
+      limit: 1
+    });
 
-  return response.items.length > 0 ? transformArticle(response.items[0]) : null;
+    if (!response.items.length) {
+      return null;
+    }
+
+    return transformArticle(response.items[0]);
+  } catch (error) {
+    console.error('Error fetching article:', error);
+    return null;
+  }
 }
