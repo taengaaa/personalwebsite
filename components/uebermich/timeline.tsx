@@ -49,9 +49,9 @@ export const Timeline = ({ items }: TimelineProps) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
-            className="flex justify-start pt-10 md:pt-40 md:gap-10"
+            className="flex justify-start pt-10 md:pt-20 md:gap-6"
           >
-            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
+            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-48">
               <motion.div 
                 className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-neutral-950 flex items-center justify-center shadow-[0_0_24px_rgba(34,_42,_53,_0.06)]"
                 whileInView={{ scale: [0.8, 1] }}
@@ -60,7 +60,7 @@ export const Timeline = ({ items }: TimelineProps) => {
                 <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
               </motion.div>
               <motion.h3 
-                className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
+                className="hidden md:block text-xl md:pl-12 md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -70,7 +70,7 @@ export const Timeline = ({ items }: TimelineProps) => {
               </motion.h3>
             </div>
 
-            <div className="relative pl-20 pr-4 md:pl-4 w-full">
+            <div className="relative pl-20 pr-4 md:pl-2 w-full">
               <motion.h3 
                 className="md:hidden block text-2xl mb-4 text-left font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
                 initial={{ opacity: 0, x: -20 }}
