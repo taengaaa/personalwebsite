@@ -1,16 +1,36 @@
 import { createClient, Entry, Asset, EntryFieldTypes } from 'contentful';
 import { Document } from '@contentful/rich-text-types';
 
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
-  environment: 'master',
-});
+interface AssetFile {
+  url: string;
+  details: {
+    size: number;
+    image?: {
+      width: number;
+      height: number;
+    };
+  };
+  fileName: string;
+  contentType: string;
+}
+
+interface AssetFields {
+  title?: { [key: string]: string };
+  description?: { [key: string]: string };
+  file: AssetFile;
+}
+
+interface AssetSys {
+  id: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 interface MediaWrapperFields {
-  internalName?: EntryFieldTypes.Symbol;
-  title?: EntryFieldTypes.Symbol;
-  description?: EntryFieldTypes.Text;
+  internalName?: string;
+  title?: string;
+  description?: string;
   image: Asset;
 }
 
@@ -67,51 +87,59 @@ export interface ContentPage {
   sections?: TimelineSection[];
 }
 
-function transformAsset(mediaWrapper: Entry<MediaWrapperSkeleton> | undefined): { 
-  url: string;
-  title?: string;
-  description?: string;
-  width?: number;
-  height?: number;
-} | undefined {
-  try {
-    if (!mediaWrapper?.fields) {
-      console.log('No media wrapper fields found');
-      return undefined;
-    }
+const client = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID!,
+  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
+  environment: 'master',
+});
 
-    const image = mediaWrapper.fields.image;
-    if (!image?.fields) {
-      console.log('No image fields found in wrapper');
-      return undefined;
-    }
-
-    const file = image.fields.file;
-    if (!file) {
-      console.log('No file found in image');
-      return undefined;
-    }
-
-    console.log('Processing image:', {
-      mediaWrapperId: mediaWrapper.sys.id,
-      imageId: image.sys.id,
-      url: file.url,
-      title: mediaWrapper.fields.title || image.fields.title,
-      description: mediaWrapper.fields.description || image.fields.description,
-      dimensions: file.details?.image ? `${file.details.image.width}x${file.details.image.height}` : 'no dimensions'
-    });
-
-    return {
-      url: file.url.startsWith('//') ? `https:${file.url}` : file.url,
-      title: mediaWrapper.fields.title || image.fields.title || undefined,
-      description: mediaWrapper.fields.description || image.fields.description || undefined,
-      width: file.details?.image?.width,
-      height: file.details?.image?.height,
-    };
-  } catch (error) {
-    console.error('Error transforming asset:', error);
+const transformAsset = (
+  mediaWrapper: Entry<MediaWrapperSkeleton> | undefined
+): { url: string; title?: string; description?: string; width?: number; height?: number } | undefined => {
+  if (!mediaWrapper?.fields) {
+    console.log('No media wrapper or fields found');
     return undefined;
   }
+
+  const image = mediaWrapper.fields.image as unknown as Asset & { sys: AssetSys };
+  if (!image?.fields) {
+    console.log('No image fields found in wrapper');
+    return undefined;
+  }
+
+  const fields = image.fields as unknown as AssetFields;
+  const file = fields.file;
+  if (!file) {
+    console.log('No file found in image');
+    return undefined;
+  }
+
+  if (!image.sys?.id) {
+    console.log('No image sys id found');
+    return undefined;
+  }
+
+  const imageTitle = fields.title?.en;
+  const imageDescription = fields.description?.en;
+  const wrapperTitle = String(mediaWrapper.fields.title || '');
+  const wrapperDescription = String(mediaWrapper.fields.description || '');
+
+  console.log('Processing image:', {
+    mediaWrapperId: mediaWrapper.sys.id,
+    imageId: image.sys.id,
+    url: file.url,
+    title: wrapperTitle || imageTitle,
+    description: wrapperDescription || imageDescription,
+    dimensions: file.details?.image ? `${file.details.image.width}x${file.details.image.height}` : 'no dimensions'
+  });
+
+  return {
+    url: file.url.startsWith('//') ? `https:${file.url}` : file.url,
+    title: wrapperTitle || imageTitle || undefined,
+    description: wrapperDescription || imageDescription || undefined,
+    width: file.details?.image?.width,
+    height: file.details?.image?.height,
+  };
 }
 
 export async function getContentPage(slug: string): Promise<ContentPage | null> {

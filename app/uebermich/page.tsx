@@ -51,13 +51,13 @@ export default async function UeberMichPage() {
         <h3 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 mb-2">{children}</h3>
       ),
       [BLOCKS.UL_LIST]: (node: Node, children: React.ReactNode) => (
-        <ul className="list-disc list-inside space-y-2 text-neutral-600 dark:text-neutral-400">{children}</ul>
+        <ul className="list-disc pl-6 space-y-2 text-neutral-600 dark:text-neutral-400">{children}</ul>
       ),
       [BLOCKS.OL_LIST]: (node: Node, children: React.ReactNode) => (
-        <ol className="list-decimal list-inside space-y-2 text-neutral-600 dark:text-neutral-400">{children}</ol>
+        <ol className="list-decimal pl-6 space-y-2 text-neutral-600 dark:text-neutral-400">{children}</ol>
       ),
       [BLOCKS.LIST_ITEM]: (node: Node, children: React.ReactNode) => (
-        <li className="text-lg">{children}</li>
+        <li className="text-lg pl-1">{children}</li>
       ),
       [INLINES.HYPERLINK]: (node: Node, children: React.ReactNode) => (
         <a href={node.data.uri} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">
