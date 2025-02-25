@@ -8,8 +8,8 @@
 
 import { createClient } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from "@/settings/contentful";
-import { Document, BLOCKS } from '@contentful/rich-text-types';
-import type { Entry, EntryFieldTypes, Asset, UnresolvedLink, EntrySkeletonType, AssetFields } from 'contentful';
+import { Document } from '@contentful/rich-text-types';
+import type { Entry, EntryFieldTypes, AssetFields } from 'contentful';
 
 /**
  * Initialisierung des Contentful Clients
@@ -111,35 +111,53 @@ function transformArticle(item: Entry<KnowledgeArticleSkeleton>): Article {
     if (imageFields.file?.url) {
       articleImage = {
         url: imageFields.file.url,
-        title: imageFields.title?.['en-US'] || imageFields.title || undefined,
-        description: imageFields.description?.['en-US'] || imageFields.description || undefined,
+        title: imageFields.title && typeof imageFields.title === 'object' ? imageFields.title['en-US'] : imageFields.title || undefined,
+        description: imageFields.description && typeof imageFields.description === 'object' ? imageFields.description['en-US'] : imageFields.description || undefined,
       };
     }
   }
 
   // Get metadata if it exists
-  const metaData = fields.metaData ? {
-    title: fields.metaData.fields.metaTitle,
-    description: fields.metaData.fields.metaDescription,
-    index: fields.metaData.fields.index,
-    robots: fields.metaData.fields.robots,
-  } : undefined;
+  let metaData;
+  if (fields.metaData && 'fields' in fields.metaData && fields.metaData.fields) {
+    const metaFields = fields.metaData.fields as unknown as MetaDataFields;
+    metaData = {
+      title: metaFields.metaTitle,
+      description: metaFields.metaDescription,
+      index: metaFields.index,
+      robots: metaFields.robots,
+    };
+  }
 
   return {
     sys: {
       id: item.sys.id
     },
-    internalName: fields.internalName,
+    internalName: typeof fields.internalName === 'object' ? 
+      (fields.internalName['en-US'] || Object.values(fields.internalName)[0] || '') : 
+      fields.internalName,
     metaData,
-    title: fields.title,
-    slug: fields.slug,
-    summary: fields.summary,
+    title: typeof fields.title === 'object' ? 
+      (fields.title['en-US'] || Object.values(fields.title)[0] || '') : 
+      fields.title,
+    slug: typeof fields.slug === 'object' ? 
+      (fields.slug['en-US'] || Object.values(fields.slug)[0] || '') : 
+      fields.slug,
+    summary: typeof fields.summary === 'object' ? 
+      (fields.summary['en-US'] || Object.values(fields.summary)[0] || '') : 
+      fields.summary,
     details: {
       json: fields.details as unknown as Document
     },
-    date: fields.date,
-    authorName: fields.authorName,
-    categoryName: fields.categoryName,
+    date: typeof fields.date === 'object' ? 
+      (fields.date['en-US'] || Object.values(fields.date)[0] || '') : 
+      fields.date,
+    authorName: typeof fields.authorName === 'object' ? 
+      (fields.authorName['en-US'] || Object.values(fields.authorName)[0] || '') : 
+      fields.authorName,
+    categoryName: typeof fields.categoryName === 'object' ? 
+      (fields.categoryName['en-US'] || Object.values(fields.categoryName)[0] || '') : 
+      fields.categoryName,
     articleImage
   };
 }
