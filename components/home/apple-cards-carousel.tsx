@@ -196,7 +196,7 @@ export const Card = ({
     >
       <div className="absolute h-full top-0 inset-x-0 bg-black/30 z-20 pointer-events-none" />
       <div className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
-      <div className="relative z-40 pt-8 pr-8 pb-8">
+      <div className="relative z-40 p-8">
         <motion.p
           layoutId={layout ? `category-${card.category}` : undefined}
           className="text-white text-sm md:text-base font-medium font-sans text-left mb-2"
@@ -205,7 +205,7 @@ export const Card = ({
         </motion.p>
         <motion.p
           layoutId={layout ? `description-${card.title}` : undefined}
-          className="text-white text-base md:text-xl max-w-xs text-left [text-wrap:balance] font-sans mb-2"
+          className="text-white text-base md:text-xl max-w-xs text-left [text-wrap:balance] font-sans mb-3"
         >
           {card.content}
         </motion.p>
