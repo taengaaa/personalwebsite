@@ -21,22 +21,25 @@ export function ProjectDrawer({ project, isOpen, onClose }: ProjectDrawerProps) 
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
         <Drawer.Content className="bg-white flex flex-col rounded-t-[32px] md:rounded-t-[64px] h-[96%] mt-24 fixed bottom-0 left-0 right-0 z-50">
-          <div className="relative">
+          {/* Close button positioned at the top right with consistent padding */}
+          <div className="sticky top-0 right-0 z-10 flex justify-end pt-4 pr-4 md:pt-6 md:pr-6">
             <button
               onClick={onClose}
-              className="absolute right-8 top-8 p-4 bg-gray-100 hover:bg-gray-200 rounded-full shadow-sm transition-colors"
+              className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full shadow-sm transition-colors"
             >
               <X className="h-5 w-5 text-gray-600" />
               <VisuallyHidden>Close</VisuallyHidden>
             </button>
           </div>
-          <div className="p-4 bg-white rounded-t-[32px] md:rounded-t-[64px] flex-1 overflow-auto">
+          
+          <div className="p-4 md:p-6 bg-white rounded-t-[32px] md:rounded-t-[64px] flex-1 overflow-auto -mt-10">
             <div className="mx-auto w-full max-w-4xl">
-              <div className="relative pt-8">
+              <div className="relative">
                 <VisuallyHidden>
                   <Drawer.Title>{project.title}</Drawer.Title>
                 </VisuallyHidden>
 
+                {/* Title positioned below the close button */}
                 <h2 className="text-3xl font-semibold text-gray-900 mb-4">{project.title}</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
