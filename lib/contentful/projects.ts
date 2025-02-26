@@ -68,7 +68,7 @@ interface TransformedUrl {
   fields: {
     text: string;
     url: string;
-    openInNewTab: boolean;
+    openInNewTab?: boolean;
   };
 }
 
@@ -170,37 +170,53 @@ export async function getProjects(): Promise<Project[]> {
 
   try {
     console.log('Fetching projects from Contentful...');
-    const response = await client.getEntries<ProjectSkeleton>({
-      content_type: 'projectCard',
-      include: 2, // Include linked entries up to 2 levels deep
-    });
+    let response;
+    try {
+      response = await client.getEntries<ProjectSkeleton>({
+        content_type: 'projectCard',
+        include: 2, // Include linked entries up to 2 levels deep
+      });
+      console.log(`Successfully fetched ${response.items?.length || 0} projects`);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      return [];
+    }
 
-    return response.items.map((item) => {
-      const fields = item.fields;
-      console.log(`\nProcessing project: ${fields.title}`);
-      console.log('Raw project fields:', JSON.stringify(fields, null, 2));
-      
-      const projectImage = transformAsset(fields.projectImage);
-      console.log('Transformed image:', JSON.stringify(projectImage, null, 2));
+    if (!response.items || !Array.isArray(response.items) || response.items.length === 0) {
+      console.log('No projects found or items is not an array');
+      return [];
+    }
 
-      const projectUrl = transformUrl(fields.projectUrl);
-      console.log('Transformed URL:', JSON.stringify(projectUrl, null, 2));
+    const projects = [];
+    for (const item of response.items) {
+      try {
+        const fields = item.fields;
+        console.log(`Processing project: ${fields.title || 'Unnamed project'}`);
+        
+        const projectImage = transformAsset(fields.projectImage);
+        const projectUrl = transformUrl(fields.projectUrl);
 
-      const project: Project = {
-        id: item.sys.id,
-        internalName: fields.internalName,
-        title: fields.title,
-        subtitleLeft: fields.subtitleLeft,
-        subtitleRight: fields.subtitleRight,
-        description: fields.description,
-        tags: fields.tags || [],
-        projectImage,
-        projectUrl: projectUrl!
-      };
+        const project: Project = {
+          id: item.sys?.id || 'unknown-id',
+          internalName: fields.internalName || 'Unnamed project',
+          title: fields.title || 'Unnamed project',
+          subtitleLeft: fields.subtitleLeft,
+          subtitleRight: fields.subtitleRight,
+          description: fields.description || '',
+          tags: Array.isArray(fields.tags) ? fields.tags : [],
+          projectImage,
+          projectUrl: projectUrl || { fields: { text: 'View Project', url: '#', openInNewTab: false } }
+        };
 
-      console.log('Transformed project:', JSON.stringify(project, null, 2));
-      return project;
-    });
+        projects.push(project);
+      } catch (itemError) {
+        console.error('Error processing project item:', itemError);
+        // Continue with next item
+      }
+    }
+
+    console.log(`Successfully transformed ${projects.length} projects`);
+    return projects;
   } catch (error) {
     console.error('Error fetching projects from Contentful:', error);
     return [];

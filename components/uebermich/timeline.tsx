@@ -7,12 +7,12 @@ import {
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
-interface TimelineEntry {
+export interface TimelineEntry {
   title: React.ReactNode;
   content: React.ReactNode;
 }
 
-interface TimelineProps {
+export interface TimelineProps {
   items: TimelineEntry[];
 }
 
@@ -23,18 +23,36 @@ export const Timeline = ({ items }: TimelineProps) => {
 
   useEffect(() => {
     if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      setHeight(rect.height);
+      const element = ref.current;
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setHeight(entry.contentRect.height);
+        }
+      });
+
+      resizeObserver.observe(element);
+      return () => {
+        resizeObserver.unobserve(element);
+        resizeObserver.disconnect();
+      };
     }
-  }, [ref]);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 10%", "end 50%"],
+    offset: ["start 20%", "end 70%"],
   });
 
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
+
+  if (!items || items.length === 0) {
+    return (
+      <div className="w-full py-20 text-center">
+        <p className="text-neutral-500 dark:text-neutral-400">Keine Timeline-Einträge gefunden</p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -47,7 +65,7 @@ export const Timeline = ({ items }: TimelineProps) => {
             key={index}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
             className="flex justify-start pt-10 md:pt-20 md:gap-6"
           >
@@ -55,6 +73,7 @@ export const Timeline = ({ items }: TimelineProps) => {
               <motion.div 
                 className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-neutral-950 flex items-center justify-center shadow-[0_0_24px_rgba(34,_42,_53,_0.06)]"
                 whileInView={{ scale: [0.8, 1] }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
               >
                 <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
@@ -63,7 +82,7 @@ export const Timeline = ({ items }: TimelineProps) => {
                 className="hidden md:block text-xl md:pl-12 md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
               >
                 {item.title}
@@ -75,7 +94,7 @@ export const Timeline = ({ items }: TimelineProps) => {
                 className="md:hidden block text-2xl mb-4 text-left font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
               >
                 {item.title}
@@ -83,7 +102,7 @@ export const Timeline = ({ items }: TimelineProps) => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.5, delay: (index * 0.2) + 0.2 }}
                 className="bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm rounded-2xl p-6 shadow-[0_0_24px_rgba(34,_42,_53,_0.06)]"
               >

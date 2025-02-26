@@ -121,11 +121,58 @@ function transformArticle(item: Entry<KnowledgeArticleSkeleton>): Article {
   let metaData;
   if (fields.metaData && 'fields' in fields.metaData && fields.metaData.fields) {
     const metaFields = fields.metaData.fields as unknown as MetaDataFields;
+    
+    // Extract metaTitle
+    let title = '';
+    if (metaFields.metaTitle) {
+      if (typeof metaFields.metaTitle === 'object') {
+        // First try en-US, then first value
+        const metaTitleObj = metaFields.metaTitle as unknown as Record<string, string>;
+        title = metaTitleObj['en-US'] || Object.values(metaTitleObj)[0] || '';
+      } else {
+        title = String(metaFields.metaTitle);
+      }
+    }
+    
+    // Extract metaDescription
+    let description = '';
+    if (metaFields.metaDescription) {
+      if (typeof metaFields.metaDescription === 'object') {
+        // First try en-US, then first value
+        const metaDescObj = metaFields.metaDescription as unknown as Record<string, string>;
+        description = metaDescObj['en-US'] || Object.values(metaDescObj)[0] || '';
+      } else {
+        description = String(metaFields.metaDescription);
+      }
+    }
+    
+    // Extract index flag
+    let index = undefined;
+    if (metaFields.index !== undefined) {
+      if (typeof metaFields.index === 'object') {
+        const indexObj = metaFields.index as unknown as Record<string, boolean>;
+        index = indexObj['en-US'] !== undefined ? indexObj['en-US'] : Object.values(indexObj)[0];
+      } else {
+        index = Boolean(metaFields.index);
+      }
+    }
+    
+    // Extract robots flag
+    let robots = undefined;
+    if (metaFields.robots !== undefined) {
+      if (typeof metaFields.robots === 'object') {
+        const robotsObj = metaFields.robots as unknown as Record<string, boolean>;
+        robots = robotsObj['en-US'] !== undefined ? robotsObj['en-US'] : Object.values(robotsObj)[0];
+      } else {
+        robots = Boolean(metaFields.robots);
+      }
+    }
+    
     metaData = {
-      title: metaFields.metaTitle,
-      description: metaFields.metaDescription,
-      index: metaFields.index,
-      robots: metaFields.robots,
+      title,
+      description,
+      index,
+      robots,
     };
   }
 

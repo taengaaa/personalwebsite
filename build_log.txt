@@ -1,0 +1,36 @@
+npm verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+npm info using npm@10.8.2
+npm info using node@v20.18.0
+npm verbose title npm run build
+npm verbose argv "run" "build" "--loglevel" "verbose"
+npm verbose logfile logs-max:10 dir:C:\Users\simon.affentranger\AppData\Local\npm-cache\_logs\2025-02-25T17_54_23_812Z-
+npm verbose logfile C:\Users\simon.affentranger\AppData\Local\npm-cache\_logs\2025-02-25T17_54_23_812Z-debug-0.log
+
+> next.js-starter@0.1.0 build
+> next build
+
+   ▲ Next.js 15.1.5
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+Failed to compile.
+
+./lib/contentful/content-page.ts:168:27
+Type error: Cannot invoke an object which is possibly 'undefined'.
+
+[0m [90m 166 |[39m   [36mconst[39m { fields } [33m=[39m section[33m;[39m[0m
+[0m [90m 167 |[39m[0m
+[0m[31m[1m>[22m[39m[90m 168 |[39m   [36mconst[39m processedImages [33m=[39m fields[33m.[39mimages[33m?[39m[33m.[39mmap(transformAsset)[33m.[39mfilter((img)[33m:[39m img is [33mNonNullable[39m[33m<[39m[36mtypeof[39m img[33m>[39m [33m=>[39m {[0m
+[0m [90m     |[39m                           [31m[1m^[22m[39m[0m
+[0m [90m 169 |[39m     [36mif[39m ([33m![39mimg) {[0m
+[0m [90m 170 |[39m       console[33m.[39mlog([32m'Image was filtered out due to transformation failure'[39m)[33m;[39m[0m
+[0m [90m 171 |[39m       [36mreturn[39m [36mfalse[39m[33m;[39m[0m
+Static worker exited with code: 1 and signal: null
+npm verbose cwd C:\Users\simon.affentranger\VSC\simonaffentranger\personalwebsite
+npm verbose os Windows_NT 10.0.22631
+npm verbose node v20.18.0
+npm verbose npm  v10.8.2
+npm verbose exit 1
+npm verbose code 1
