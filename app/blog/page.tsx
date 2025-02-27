@@ -59,7 +59,7 @@ export default async function BlogPage() {
               <Link 
                 key={article.sys.id} 
                 href={`/blog/${article.slug}`} 
-                className="block group"
+                className="block group relative z-10"
               >
                 <article className="flex flex-col h-full rounded-lg shadow-lg overflow-hidden bg-white dark:bg-neutral-800 transition-shadow hover:shadow-xl">
                   {article.articleImage?.url && (
