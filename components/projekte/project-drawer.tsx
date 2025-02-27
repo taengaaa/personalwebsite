@@ -22,7 +22,7 @@ export function ProjectDrawer({ project, isOpen, onClose }: ProjectDrawerProps) 
         <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
         <Drawer.Content className="bg-white flex flex-col rounded-t-[32px] md:rounded-t-[64px] h-[96%] mt-24 fixed bottom-0 left-0 right-0 z-50">
           {/* Close button positioned at the top right with consistent padding */}
-          <div className="sticky top-0 right-0 z-10 flex justify-end pt-4 pr-4 md:pt-6 md:pr-6">
+          <div className="sticky top-0 right-0 z-10 flex justify-end p-4 md:p-6">
             <button
               onClick={onClose}
               className="p-3 bg-gray-100 hover:bg-gray-200 rounded-full shadow-sm transition-colors"
@@ -39,9 +39,8 @@ export function ProjectDrawer({ project, isOpen, onClose }: ProjectDrawerProps) 
                   <Drawer.Title>{project.title}</Drawer.Title>
                 </VisuallyHidden>
 
-                {/* Title positioned below the close button */}
-                <h2 className="text-3xl font-semibold text-gray-900 mb-4">{project.title}</h2>
-
+                {/* Title positioned below the close button with proper wrapping on mobile */}
+                <h2 className="text-3xl font-semibold text-gray-900 mb-4 pr-12 md:pr-0">{project.title}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Left Column */}
                   <div>
