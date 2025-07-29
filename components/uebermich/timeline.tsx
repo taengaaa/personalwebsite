@@ -79,7 +79,8 @@ export const Timeline = ({ items }: TimelineProps) => {
                 <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
               </motion.div>
               <motion.h3 
-                className="hidden md:block text-xl md:pl-12 md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
+                className="hidden md:block text-xl md:pl-12 md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500 break-words hyphens-auto"
+                style={{ wordBreak: 'break-word', hyphens: 'auto' }}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -91,7 +92,7 @@ export const Timeline = ({ items }: TimelineProps) => {
 
             <div className="relative pl-20 pr-4 md:pl-2 w-full">
               <motion.h3 
-                className="md:hidden block text-2xl mb-4 text-left font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500"
+                className="md:hidden block text-xl mb-4 text-left font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500 whitespace-nowrap"
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
